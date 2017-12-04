@@ -1,0 +1,191 @@
+language: cpp
+
+env:
+  global:
+    # COVERITY_SCAN_TOKEN
+    - secure: "AS5OPg1+LGfvmAZRA2zpr66IukHRs3iJ/LfKjXAt4H7odlRCu0SB+eg0HuCea7nckCC83RPHWo3r333ts04OzavigDUd3jINzex3779IKFGN1oay9CGdx6Nsu8dqEPhxicNEbOqw5uoD5BT86AJViqSoj2q7mnzUGwIOFUv/wdP4S0HHUFO9xtd4bghLP4FdleM6+zyf+hyLlUQAVCq06sMczqaKbksqzwGIVzSPDtTijD6hxyfKux9phbtsc9ZoNtHtpGvu6MBW/t0zT8uIGD17lGI4/5SWr9Y+cKSUV5XVah1n3W3bwBYLsh1wVoBSKN8TXVVO+k368w6fGSs/3eapJcRE5j4KOxMljVOlGNkyX6pfg+QkbwSLAFhwn4wpGzEx1nd1YTsHDd/FnvYfFxCjY2o5hSuVBg7DPWzH7DXunnCRiCZed2ogGc55RUqzy4Hj70Zjh/CmLo1/9XCk+UnHmcLDvjkHK4cwp68uE4fzBvNyvtt7C51QoyZxovtKomBaLtvi7OuKaZ+8IRfjPZDJis4Vw2N1YTf/8fa3mHICM1SKCxWucI6IJcCs2Cx2kOUkgmN+lJqOIuTWJnDmiBtN3k6SvUvUG6aTcm4p+eJUyumsIjy6gZN7yZxm8+62YQt3IzIBDqTT4W/AFMwalIFQJegVuWYLl7cplabA5d0="
+
+matrix:
+  include:
+    # compile runners
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y g++-5 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="g++-5"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y g++-6 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="g++-6"
+    #- os: linux
+    #  dist: trusty
+    #  sudo: required
+    #  env: JOB='compile'
+    #  before_install:
+    #    - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+    #    - sudo apt-get update
+    #    - sudo apt-get install -y g++-7 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+    #    - export CXX="g++-7"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y clang-3.8 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++-3.8"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y clang-3.9 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++-3.9"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y clang-4.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++-4.0"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty-4.0 main"
+        - sudo apt-get update
+        - sudo apt-get install -y clang-4.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++-4.0"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty-5.0 main"
+        - sudo apt-get update
+        - sudo apt-get install -y clang-5.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++-5.0"
+    #- os: linux
+    #  dist: trusty
+    #  sudo: required
+    #  env: JOB='compile'
+    #  before_install:
+    #    - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+    #    - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+    #    - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty main"
+    #    - sudo apt-get update
+    #    - sudo apt-get install -y clang-6.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+    #    - export CXX="clang++-6.0"
+    - os: osx
+      osx_image: xcode6.4
+      env: JOB='compile'
+      before_install:
+        - brew update
+        - brew uninstall --ignore-dependencies boost
+        - brew install homebrew/versions/boost160
+        - brew link --force homebrew/versions/boost160
+    - os: osx
+      osx_image: xcode7.3
+      env: JOB='compile'
+    - os: osx
+      osx_image: xcode8
+      env: JOB='compile'
+    - os: osx
+      osx_image: xcode8.3
+      env: JOB='compile'
+    - os: osx
+      osx_image: xcode9
+      env: JOB='compile'
+    - os: osx
+      env: JOB='compile'
+      before_install:
+        - brew update
+        - brew install llvm
+        - CXX="/usr/local/opt/llvm/bin/clang++"
+
+    # lint runners
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='lint'
+      before_install:
+        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty-5.0 main"
+        - sudo apt-get update
+        - sudo apt-get install -y libboost-dev libboost-filesystem-dev libboost-program-options-dev clang-5.0 clang-format-5.0 clang-tidy-5.0
+        - mkdir -p ~/bin
+        - sudo ln -s /usr/bin/clang-format-5.0 ~/bin/clang-format
+        - sudo ln -s /usr/bin/clang-tidy-5.0 ~/bin/clang-tidy
+        - export CXX="clang++-5.0"
+    - os: osx
+      env: JOB='lint'
+      before_install:
+        - brew update
+        - brew install llvm diffutils clang-format
+        - ln -s /usr/local/opt/llvm/bin/clang-tidy /usr/local/bin/clang-tidy
+        - CXX="/usr/local/opt/llvm/bin/clang++"
+
+    # other integrations
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='coverity'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y g++-5 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="g++-5"
+        - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+        - export COVERITY_SCAN_PROJECT_NAME='stephensolis/modmap-generator-cpp'
+        - export COVERITY_SCAN_NOTIFICATION_EMAIL='stephen@nowhere'
+        - export COVERITY_SCAN_BRANCH_PATTERN='master'
+        - export COVERITY_SCAN_BUILD_COMMAND_PREPEND='cov-configure --comptype gcc --compiler g++-5 --template'
+        - export COVERITY_SCAN_BUILD_COMMAND='make'
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='coverage'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y g++ libboost-dev libboost-filesystem-dev libboost-program-options-dev lcov
+        - npm install -g coveralls codecov.io
+
+before_script:
+  - $CXX --version
+  - if [[ $JOB = 'lint' ]]; then clang-format --version; fi
+  - if [[ $JOB = 'lint' ]]; then clang-tidy --version; fi
+  - if [[ $JOB = 'coverage' ]]; then gcov --version; fi
+  - if [[ $JOB = 'coverage' ]]; then lcov --version; fi
+script:
+  - mkdir build && cd build
+  - if [[ $JOB != 'coverage' ]]; then cmake ..; fi
+  - if [[ $JOB = 'coverage' ]]; then cmake -DCMAKE_BUILD_TYPE="Coverage" ..; fi
+  - if [[ $JOB = 'compile' ]]; then make; fi
+  - if [[ $JOB = 'compile' ]]; then make check-tests; fi
+  - if [[ $JOB = 'lint' ]]; then ! make check-lint | grep -Ev "(Scanning dependencies of target|Built target)"; fi
+  - if [[ $JOB = 'lint' ]]; then ! make check-format | grep -Ev "(Scanning dependencies of target|Built target)"; fi
+  - if [[ $JOB = 'coverity' ]]; then curl -s 'https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh' | bash || true; fi
+  - if [[ $JOB = 'coverage' ]]; then make coverage; fi
+  - if [[ $JOB = 'coverage' ]]; then cat coverage.info | coveralls; fi
+  - if [[ $JOB = 'coverage' ]]; then cat coverage.info | codecov; fi

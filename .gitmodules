@@ -1,0 +1,3 @@
+[submodule "benchmarks/mathematica"]
+	path = benchmarks/mathematica
+	url = https://github.com/stephensolis/modmap-generator-mma

@@ -1,0 +1,23 @@
+language: none
+
+env:
+  matrix:
+    - CXX='g++-5' EXTRA_PACKAGES='g++-5'
+    - CXX='g++-6' EXTRA_PACKAGES='g++-6'
+    - CXX='g++-7' EXTRA_PACKAGES='g++-7'
+    - CXX='clang++-3.9' EXTRA_PACKAGES='clang-3.9 g++'
+    - CXX='clang++-4.0' EXTRA_PACKAGES='clang-4.0 g++'
+    - CXX='clang++-5.0' EXTRA_PACKAGES='clang-5.0 g++'
+
+build:
+  pre_ci_boot:
+    image_name: debian
+    image_tag: sid
+    pull: true
+  ci:
+    - sudo apt-get update
+    - for i in {1..5}; do sudo apt-get install -y cmake libboost-dev libboost-filesystem-dev libboost-program-options-dev $EXTRA_PACKAGES && break || sleep 5; done
+    - mkdir build && cd build
+    - cmake ..
+    - make
+    - make check-tests

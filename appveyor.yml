@@ -1,0 +1,96 @@
+version: "#{build}"
+
+image:
+  - Visual Studio 2015
+  - Visual Studio 2017
+
+environment:
+  matrix:
+    - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_59_0
+    - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_60_0
+    - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_62_0
+    - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_63_0
+    - JOB: compile
+      ARCH: x86
+      BOOST_VERSION: 1_63_0
+    - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_64_0
+    - JOB: compile
+      ARCH: x86
+      BOOST_VERSION: 1_64_0
+    - JOB: compile
+      ARCH: amd64
+      CXX: clang-cl
+      BOOST_VERSION: 1_62_0
+
+    - JOB: lint
+      ARCH: amd64
+      BOOST_VERSION: 1_63_0
+
+matrix:
+  exclude:
+    - image: Visual Studio 2017
+      JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_59_0
+    - image: Visual Studio 2017
+      JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_60_0
+    - image: Visual Studio 2017
+      JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_62_0
+    - image: Visual Studio 2017
+      JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_63_0
+    - image: Visual Studio 2017
+      JOB: compile
+      ARCH: x86
+      BOOST_VERSION: 1_63_0
+    - image: Visual Studio 2015
+      JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_64_0
+    - image: Visual Studio 2015
+      JOB: compile
+      ARCH: x86
+      BOOST_VERSION: 1_64_0
+    - image: Visual Studio 2017
+      JOB: compile
+      ARCH: amd64
+      CXX: clang-cl
+      BOOST_VERSION: 1_62_0
+    - image: Visual Studio 2017
+      JOB: lint
+      ARCH: amd64
+      BOOST_VERSION: 1_63_0
+
+init:
+  - if exist "C:\Program Files (x86)\Microsoft Visual Studio\2017" ( appveyor SetVariable -Name VS_VER -Value 2017 ) else ( appveyor SetVariable -Name VS_VER -Value 2015 )
+  - if "%ARCH%"=="amd64" ( appveyor SetVariable -Name BOOST_LIBDIR -Value lib64-msvc ) else ( appveyor SetVariable -Name BOOST_LIBDIR -Value lib32-msvc )
+  - if "%VS_VER%"=="2017" ( appveyor SetVariable -Name BOOST_LIB_VERSION -Value 14.1 ) else ( appveyor SetVariable -Name BOOST_LIB_VERSION -Value 14.0 )
+  - if "%VS_VER%"=="2017" ( appveyor SetVariable -Name BOOST_COMPILER_VERSION -Value vc141 ) else ( appveyor SetVariable -Name BOOST_COMPILER_VERSION -Value vc140 )
+before_build:
+  - if "%VS_VER%"=="2015" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%
+  - if "%VS_VER%"=="2017" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsDevCmd.bat" -arch=%ARCH%
+build_script:
+  - mkdir build && cd build
+  - cmake -G "NMake Makefiles" -DBOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION% -DBOOST_LIBRARYDIR=C:/Libraries/boost_%BOOST_VERSION%/%BOOST_LIBDIR%-%BOOST_LIB_VERSION% -DBoost_COMPILER=-%BOOST_COMPILER_VERSION% ..
+  - if "%JOB%"=="compile" nmake
+before_test:
+  - bash -c "if [[ $JOB = 'lint' ]]; then sed -i '/FixNamespaceComments.*/d' ../.clang-format; fi"
+test_script:
+  - if "%JOB%"=="compile" nmake check-tests
+  - bash -c "if [[ $JOB = 'lint' ]]; then ! nmake //nologo check-lint | grep -Ev '(Scanning dependencies of target|Built target)'; fi"
+  - bash -c "if [[ $JOB = 'lint' ]]; then ! nmake //nologo check-format | grep -Ev '(Scanning dependencies of target|Built target)'; fi"
