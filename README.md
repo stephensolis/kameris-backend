@@ -61,7 +61,7 @@ Try putting some FASTA files in a directory `fasta`, creating a directory `outpu
 
 ## Benchmarks
 
-Below, 'Mathematica' means [stephensolis/modmap-generator-mma](https://github.com/stephensolis/modmap-generator-mma) at commit [212d0fda](https://github.com/stephensolis/modmap-generator-mma/tree/212d0fda91f58e7e7111ef5bfdc1dde0810b8c74), and 'C++' means this repository at commit [44758f04](https://github.com/stephensolis/modmap-generator-cpp/tree/44758f0460ea6ff76a03b9b48e2cad4d8fe44f65).
+Below, 'Mathematica' means [stephensolis/modmap-generator-mma](https://github.com/stephensolis/modmap-generator-mma) at commit [212d0fda](https://github.com/stephensolis/modmap-generator-mma/tree/212d0fda91f58e7e7111ef5bfdc1dde0810b8c74), and 'C++' means this repository at commit [8af2864a](https://github.com/stephensolis/modmap-generator-cpp/tree/8af2864a7db76daaa29de3d60585b70e7e6e37fd).
 
 Tests were performed on an AWS [c4.4xlarge](https://aws.amazon.com/ec2/instance-types/#c4) (8 cores/16 threads of an Intel Xeon E5-2666 v3), using Mathematica 11.0.1 and the AVX2-release version of this software. Benchmarking code can be found in the `benchmarks/` folder.
 
