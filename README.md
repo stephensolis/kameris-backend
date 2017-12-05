@@ -6,9 +6,9 @@
 |:-----:|:-----:|:-----:|:-----:|
 | [![Travis](https://travis-ci.org/stephensolis/modmap-generator-cpp.svg?branch=master)](https://travis-ci.org/stephensolis/modmap-generator-cpp) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/2t4ydkdixbc00ybv?svg=true)](https://ci.appveyor.com/project/stephensolis/modmap-generator-cpp) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/bc733073537cd665d597942188c5a4ff/s/master)](https://app.wercker.com/project/byKey/bc733073537cd665d597942188c5a4ff) |
 
-| Coverity | Coveralls | Codecov |
-|:-----:|:-----:|:-----:|
-| [![Coverity](https://scan.coverity.com/projects/11296/badge.svg)](https://scan.coverity.com/projects/stephensolis-modmap-generator-cpp) | [![Coveralls](https://coveralls.io/repos/github/stephensolis/modmap-generator-cpp/badge.svg?branch=master)](https://coveralls.io/github/stephensolis/modmap-generator-cpp?branch=master) | [![Codecov](https://codecov.io/gh/stephensolis/modmap-generator-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/stephensolis/modmap-generator-cpp) |
+| Coverity | Codacy | Coveralls | Codecov |
+|:-----:|:-----:|:-----:|:-----:|
+| [![Coverity](https://scan.coverity.com/projects/11296/badge.svg)](https://scan.coverity.com/projects/stephensolis-modmap-generator-cpp) | [![Codacy](https://api.codacy.com/project/badge/Grade/7d0d5cf06d1a4b279b2d4a2e47e51e65)](https://www.codacy.com/app/stephensolis/modmap-generator-cpp) | [![Coveralls](https://coveralls.io/repos/github/stephensolis/modmap-generator-cpp/badge.svg?branch=master)](https://coveralls.io/github/stephensolis/modmap-generator-cpp?branch=master) | [![Codecov](https://codecov.io/gh/stephensolis/modmap-generator-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/stephensolis/modmap-generator-cpp) |
 
 This is a fast C++ implementation of some functionality for generating Molecular Distance Maps, as seen in the following papers:
 

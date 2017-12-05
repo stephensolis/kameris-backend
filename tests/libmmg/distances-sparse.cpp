@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <map>
+#include <stdexcept>
 
 #include <libmmg/distances-sparse.hpp>
 #include <libmmg/io/adapters.hpp>

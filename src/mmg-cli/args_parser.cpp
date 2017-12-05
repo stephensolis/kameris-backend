@@ -11,8 +11,8 @@
 #include "../common/output_headers.hpp"
 
 #include "args_parser.hpp"
+#include "console_marks.hpp"
 #include "exceptions.hpp"
-#include "streams.hpp"
 #include "usage_strings.hpp"
 
 namespace po = boost::program_options;
@@ -78,8 +78,8 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 	try {
 		program_args result;
 		string mode_str, int_precision_str, float_precision_str;
-		int threads, blocksize;
-		bool no_cuda, no_opencl;
+		int threads = 0, blocksize = 0;
+		bool no_cuda = false, no_opencl = false;
 
 		po::positional_options_description pos_opts;
 		pos_opts.add("mode", 1);
@@ -196,7 +196,7 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 
 		return result;
 	} catch (const invalid_argument &ex) {
-		cerr << error << ex.what() << endl << endl;
+		cerr << error_mark << ex.what() << endl << endl;
 		usage::put_options_help(cerr);
 		throw already_handled_error();
 	}

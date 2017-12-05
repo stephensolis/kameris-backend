@@ -1,6 +1,7 @@
 #include <catch.hpp>
 
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 
 #include <libmmg/io/adapters.hpp>

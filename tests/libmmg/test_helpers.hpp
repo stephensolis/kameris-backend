@@ -16,7 +16,7 @@ inline bool double_approx_equal(double val1, double val2) {
 	}
 
 #define TEST_THROWS(description, expr, exception_t) \
-	THEN(#description " throws " #exception_t) {    \
+	THEN(#description " throws an " #exception_t) { \
 		CHECK_THROWS_AS((expr), exception_t);       \
 	}
 

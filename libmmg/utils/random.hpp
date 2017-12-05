@@ -32,8 +32,12 @@ namespace mmg {
 	inline std::string random_string(size_t size, const Vect &choices) {
 		using namespace std;
 
+		if (choices.size() == 0) {
+			throw std::invalid_argument("At least one choice must be given");
+		}
+
 		static mt19937 gen(random_device{}());
-		uniform_int_distribution<int> dist(0, choices.size() - 1);
+		uniform_int_distribution<int> dist(0, int(choices.size()) - 1);
 
 		string out;
 		out.reserve(size);

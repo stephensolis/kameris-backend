@@ -24,8 +24,8 @@
 #include "../common/options_structs.hpp"
 #include "../common/output_headers.hpp"
 
+#include "console_marks.hpp"
 #include "exceptions.hpp"
-#include "streams.hpp"
 #include "usage_strings.hpp"
 
 using namespace std;
@@ -231,17 +231,17 @@ vector<JobOptions> parse_jobs(const string &jobspecs, const Parser &parser, cons
 
 			jobs.push_back(curr_job);
 		} catch (const invalid_argument &ex) {
-			cerr << error << ex.what() << endl << endl;
+			cerr << error_mark << ex.what() << endl << endl;
 			cerr << usage::main << endl << usage_str;
 			throw already_handled_error();
 		} catch (const x3::expectation_failure<std::string::const_iterator> &ex) {
 			if (ex.which() == "eoi") {
-				cerr << error << "Invalid job specification: unexpected value here: " << endl;
+				cerr << error_mark << "Invalid job specification: unexpected value here: " << endl;
 			} else if (parsers::friendly_parser_names.count(ex.which())) {
-				cerr << error << "Invalid job specification: expected " << parsers::friendly_parser_names.at(ex.which())
-					 << " here: " << endl;
+				cerr << error_mark << "Invalid job specification: expected "
+					 << parsers::friendly_parser_names.at(ex.which()) << " here: " << endl;
 			} else {
-				cerr << error << "Invalid job specification: expected " << ex.which() << " here: " << endl;
+				cerr << error_mark << "Invalid job specification: expected " << ex.which() << " here: " << endl;
 			}
 			cerr << "      " << jobspec << endl;
 			cerr << "      " << string(ex.where() - jobspec.begin(), ' ') << '^' << endl << endl;
@@ -251,7 +251,7 @@ vector<JobOptions> parse_jobs(const string &jobspecs, const Parser &parser, cons
 	}
 
 	if (jobs.empty()) {
-		cerr << error << "The option 'job' is required but missing" << endl << endl;
+		cerr << error_mark << "The option 'job' is required but missing" << endl << endl;
 		usage::put_options_help(cerr);
 		throw already_handled_error();
 	}

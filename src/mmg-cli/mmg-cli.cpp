@@ -6,10 +6,10 @@
 #include "../common/version.hpp"
 
 #include "args_parser.hpp"
+#include "console_marks.hpp"
 #include "exceptions.hpp"
 #include "jobspec_parsers.hpp"
 #include "progress_bar.hpp"
-#include "streams.hpp"
 #include "usage_strings.hpp"
 
 using namespace std;
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	} catch (const already_handled_error &) {
 		return 1;
 	} catch (const exception &ex) {
-		cerr << error << "An unexpected error occurred: " << ex.what() << endl;
+		cerr << error_mark << "An unexpected error occurred: " << ex.what() << endl;
 		return 1;
 	}
 }

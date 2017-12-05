@@ -22,7 +22,7 @@ using namespace mmg;
 int main() {
 	//setup
 
-	const int num_seqs = 100;
+	const size_t num_seqs = 100;
 	vector<string> seqs;
 	seqs.reserve(num_seqs);
 
@@ -116,7 +116,7 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const string &a : seqs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				return cgr(a, 9); //
 			}));
 		}
@@ -133,7 +133,7 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				auto img = make_matrix_adapter(a.data(), 512, 512);
 				auto desc = descriptor(img, vector<size_t>{8}, vector<unsigned>{0, 1, 2, 5, 20});
 				return desc[0];
@@ -152,9 +152,9 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				double result = 0;
-				for (int i = 0; i < num_seqs; ++i) {
+				for (size_t i = 0; i < num_seqs; ++i) {
 					result += euclidean(a, cgrs[i]);
 				}
 				return result;
@@ -173,9 +173,9 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				double result = 0;
-				for (int i = 0; i < num_seqs; ++i) {
+				for (size_t i = 0; i < num_seqs; ++i) {
 					result += manhattan(a, cgrs[i]);
 				}
 				return result;
@@ -194,9 +194,9 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				double result = 0;
-				for (int i = 0; i < num_seqs; ++i) {
+				for (size_t i = 0; i < num_seqs; ++i) {
 					result += approx_info_dist(a, cgrs[i]);
 				}
 				return result;
@@ -215,9 +215,9 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				double result = 0;
-				for (int i = 0; i < num_seqs; ++i) {
+				for (size_t i = 0; i < num_seqs; ++i) {
 					result += cosine(a, cgrs[i]);
 				}
 				return result;
@@ -236,9 +236,9 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				double result = 0;
-				for (int i = 0; i < num_seqs; ++i) {
+				for (size_t i = 0; i < num_seqs; ++i) {
 					result += pearson(a, cgrs[i]);
 				}
 				return result;
@@ -257,9 +257,9 @@ int main() {
 		results.reserve(num_seqs);
 
 		for (const vector<uint32_t> &a : cgrs) {
-			results.push_back(exec.enqueue([&](unsigned _ignore) {
+			results.push_back(exec.enqueue([&](unsigned) {
 				double result = 0;
-				for (int i = 0; i < num_seqs; ++i) {
+				for (size_t i = 0; i < num_seqs; ++i) {
 					auto img1 = make_matrix_adapter(a.data(), 512, 512);
 					auto img2 = make_matrix_adapter(cgrs[i].data(), 512, 512);
 					result += ssim(img1, img2);

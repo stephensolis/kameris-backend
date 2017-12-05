@@ -61,13 +61,17 @@ namespace mmg {
 		}
 
 		void execute(unsigned threads) {
+			if (threads == 0) {
+				throw std::invalid_argument("At least one thread must be started");
+			}
+
 			if (started) {
 				throw std::logic_error("Execution can only be started once");
 			}
 			started = true;
 
-			for (unsigned i = 0; i < threads; ++i) {
-				workers.emplace_back([i, this]() {
+			for (unsigned thread_id = 0; thread_id < threads; ++thread_id) {
+				workers.emplace_back([thread_id, this]() {
 					while (true) {
 						size_t curr_task = this->curr_task.fetch_add(1, std::memory_order_relaxed);
 
@@ -75,7 +79,7 @@ namespace mmg {
 							return;
 						}
 
-						this->tasks[curr_task](i);
+						this->tasks[curr_task](thread_id);
 					}
 				});
 			}

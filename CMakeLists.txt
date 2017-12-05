@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
-cmake_policy(SET CMP0054 NEW)
+cmake_minimum_required(VERSION 3.1.0)
 
 # build types
 set(CMAKE_CONFIGURATION_TYPES Debug Release ReleaseIntel Coverage
@@ -8,8 +7,6 @@ if(NOT CMAKE_BUILD_TYPE)
 	# default build type is debug
 	set(CMAKE_BUILD_TYPE Debug
 		CACHE STRING "" FORCE)
-elseif(CMAKE_BUILD_TYPE STREQUAL "Coverage" AND CMAKE_COMPILER_IS_GNUCXX)
-	message(FATAL_ERROR "Coverage support is only available for gcc")
 elseif(NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "Release" OR
 			CMAKE_BUILD_TYPE STREQUAL "ReleaseIntel" OR CMAKE_BUILD_TYPE STREQUAL "Coverage"))
 	message(FATAL_ERROR "Unknown build type '${CMAKE_BUILD_TYPE}'")
@@ -25,7 +22,12 @@ if(CMAKE_BUILD_TYPE STREQUAL "ReleaseIntel")
 endif()
 
 project(modmap-generator-cpp
-		LANGUAGES CXX)
+		LANGUAGES C CXX)
+
+# note CMAKE_CXX_COMPILER_ID isn't defined until here
+if(CMAKE_BUILD_TYPE STREQUAL "Coverage" AND NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+	message(FATAL_ERROR "Coverage support is only available for gcc")
+endif()
 
 # source file lists
 file(GLOB_RECURSE PROJECT_SOURCES
@@ -95,6 +97,11 @@ find_package(Boost 1.59 REQUIRED
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+# this is needed to use <thread> on Linux
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
 # setup for other include directories
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/external")
@@ -102,7 +109,7 @@ include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/external")
 # sets up a release target
 function(add_cli_intel_release_target target_name flags_windows flags_linux build_type)
 	add_executable(${target_name} ${SOURCES_MMG_CLI})
-	target_link_libraries(${target_name} ${Boost_LIBRARIES})
+	target_link_libraries(${target_name} ${Boost_LIBRARIES} Threads::Threads)
 
 	# platform-specific flags
 	if(WIN32)
@@ -124,7 +131,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "ReleaseIntel")
 	add_cli_intel_release_target(mmg-cli-avx512 "/QxCORE-AVX512" "-xCORE-AVX512" "release-avx512")
 else()
 	add_executable(mmg-cli ${SOURCES_MMG_CLI})
-	target_link_libraries(mmg-cli ${Boost_LIBRARIES})
+	target_link_libraries(mmg-cli ${Boost_LIBRARIES} Threads::Threads)
 
 	string(TOLOWER "${CMAKE_BUILD_TYPE}" build_type)
 	target_compile_definitions(mmg-cli PRIVATE -DBUILD_TYPE="${build_type}")
@@ -133,7 +140,7 @@ endif()
 # add test target
 add_executable(test-mmg EXCLUDE_FROM_ALL
 			   ${SOURCES_TEST_MMG})
-target_link_libraries(test-mmg ${Boost_LIBRARIES})
+target_link_libraries(test-mmg ${Boost_LIBRARIES} Threads::Threads)
 add_custom_target(check-tests
 				  COMMAND test-mmg VERBATIM
 				  DEPENDS test-mmg)
