@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 
+#include "checkpointer.hpp"
 #include "filesystem_checks.hpp"
 #include "job_execution.hpp"
 #include "options_structs.hpp"
@@ -20,10 +21,8 @@ class repr_executor : public executor {
  public:
 	repr_executor(program_options options, vector<repr_options> jobs)
 		: options(std::move(options)), jobs(std::move(jobs)) {}
-	void run(function<bool(confirmation_type, string /*message*/)> on_confirm_action,
-		/**/ function<void(const run_options &, uint64_t /*est_memory*/, const gpu_info &)> on_run_start,
-		/**/ function<void(const stage_change_info &)> on_stage_change,
-		/**/ function<void(unsigned)> on_progress) const override {
+	void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start, on_stage_change_t on_stage_change,
+		/**/ on_progress_t on_progress) const override {
 		//(code here)
 	}
 };
@@ -36,10 +35,8 @@ class dist_executor : public executor {
  public:
 	dist_executor(program_options options, vector<dist_options> jobs)
 		: options(std::move(options)), jobs(std::move(jobs)) {}
-	void run(function<bool(confirmation_type, string /*message*/)> on_confirm_action,
-		/**/ function<void(const run_options &, uint64_t /*est_memory*/, const gpu_info &)> on_run_start,
-		/**/ function<void(const stage_change_info &)> on_stage_change,
-		/**/ function<void(unsigned)> on_progress) const override {
+	void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start, on_stage_change_t on_stage_change,
+		/**/ on_progress_t on_progress) const override {
 		//(code here)
 	}
 };

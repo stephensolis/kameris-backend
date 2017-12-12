@@ -44,12 +44,12 @@ int main(int argc, char *argv[]) {
 		}
 
 		exec->run(
-			[](confirmation_type type, const std::string &message) {
+			[](const confirm_action_info &info) {
 				//on confirmation prompt
 				//(code here)
 				return true;
 			},
-			[](const run_options &, uint64_t est_memory_use, const gpu_info &) {
+			[](const run_start_info &info) {
 				//on program run start
 				//(code here)
 			},
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 				//on stage change
 				//(code here)
 			},
-			[](unsigned progress) {
+			[](const progress_info &info) {
 				//on stage progress
 				//(code here)
 			});
