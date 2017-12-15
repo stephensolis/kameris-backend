@@ -272,8 +272,7 @@ vector<repr_options> parse_repr_jobs(const string &jobspecs) {
 						/**/ get<unsigned>(curr_cgrlike_job.k_or_spacedseed) < 1) {
 						throw invalid_argument("Value for parameter 'k' must be at least 1");
 					}
-				}
-				if (curr_job.type() == typeid(sparse_cgrlike_options)) {
+				} else if (curr_job.type() == typeid(sparse_cgrlike_options)) {
 					auto curr_sparse_cgrlike_job = get<sparse_cgrlike_options>(curr_job);
 					if (curr_sparse_cgrlike_job.k_or_spacedseed.type() == typeid(unsigned) &&
 						/**/ get<unsigned>(curr_sparse_cgrlike_job.k_or_spacedseed) < 1) {
@@ -282,8 +281,7 @@ vector<repr_options> parse_repr_jobs(const string &jobspecs) {
 					if (curr_sparse_cgrlike_job.freqcut <= 0) {
 						throw invalid_argument("Value for parameter 'freqcut' must be greater than 0");
 					}
-				}
-				if (curr_job.type() == typeid(descr_options)) {
+				} else if (curr_job.type() == typeid(descr_options)) {
 					auto curr_descr_job = get<descr_options>(curr_job);
 					if (boost::algorithm::any_of(curr_descr_job.bins, [](double bin) { return bin <= 0; })) {
 						throw invalid_argument("Values for parameter 'bins' must be greater than 0");

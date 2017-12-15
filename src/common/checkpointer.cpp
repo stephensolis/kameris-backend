@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ios>
 #include <string>
+#include <utility>
 
 #include <libmmg/io/binary.hpp>
 #include <libmmg/io/storage_encoding.hpp>
@@ -12,22 +13,34 @@
 using namespace std;
 using namespace mmg;
 
+constexpr unsigned Checkpointer::update_rate;
+
 void Checkpointer::rewind() {
-	resume_file.seekp(-int(sizeof state().stage_num + sizeof state().stage_pos), ios::end);
+	size_t state_size = -int(sizeof state().stage_num + sizeof state().stage_pos);
+	file.seekg(state_size, ios::end);
+	file.seekp(state_size, ios::end);
 }
 
-void Checkpointer::init_new(const string &filename) {
-	resume_file.open(filename, ios::binary | ios::trunc);
+void Checkpointer::write_state(const state &curr_state) {
+	write_binary_raw(file, to_storage_encoding(curr_state.stage_num));
+	write_binary_raw(file, to_storage_encoding(curr_state.stage_pos));
+	file.flush();
 }
 
-Checkpointer::state Checkpointer::init_existing(const string &filename) {
-	resume_file.open(filename, ios::binary);
+Checkpointer::Checkpointer(std::fstream &&resume_file, bool initialize_file) : file(move(resume_file)) {
+	if (initialize_file) {
+		file.seekp(0, ios::end);
+		write_state({});
+	}
+}
+
+Checkpointer::state Checkpointer::read_state() {
 	rewind();
 
 	state curr_state{};
-	read_binary_raw(resume_file, curr_state.stage_num);
+	read_binary_raw(file, curr_state.stage_num);
 	curr_state.stage_num = from_storage_encoding<decltype(curr_state.stage_num)>(curr_state.stage_num);
-	read_binary_raw(resume_file, curr_state.stage_pos);
+	read_binary_raw(file, curr_state.stage_pos);
 	curr_state.stage_pos = from_storage_encoding<decltype(curr_state.stage_num)>(curr_state.stage_pos);
 
 	return curr_state;
@@ -40,9 +53,6 @@ void Checkpointer::checkpoint(const state &curr_state) {
 	}
 	last_write = now;
 
-	write_binary_raw(resume_file, to_storage_encoding(curr_state.stage_num));
-	write_binary_raw(resume_file, to_storage_encoding(curr_state.stage_pos));
-
-	resume_file.flush();
 	rewind();
+	write_state(curr_state);
 }

@@ -9,10 +9,12 @@
 #include "../common/defaults.hpp"
 #include "../common/filesystem_checks.hpp"
 #include "../common/output_headers.hpp"
+#include "../common/run_options.hpp"
 
 #include "args_parser.hpp"
 #include "console_marks.hpp"
 #include "exceptions.hpp"
+#include "jobspec_parsers.hpp"
 #include "usage_strings.hpp"
 
 namespace po = boost::program_options;
@@ -56,15 +58,15 @@ element_type parse_int_precision(const string &precision_str) {
 	}
 }
 
-element_type parse_float_precision(program_mode mode, const string &precision_str) {
+element_type parse_float_precision(run_mode mode, const string &precision_str) {
 	if (precision_str == "single") {
 		return element_type::float32;
 	} else if (precision_str == "double") {
 		return element_type::float64;
 	} else if (precision_str == "default") {
-		if (mode == program_mode::repr) {
+		if (mode == run_mode::repr) {
 			return defaults::repr_float_precision;
-		} else if (mode == program_mode::dist) {
+		} else if (mode == run_mode::dist) {
 			return defaults::dist_float_precision;
 		} else {
 			throw logic_error("Unknown program mode value");
@@ -74,12 +76,12 @@ element_type parse_float_precision(program_mode mode, const string &precision_st
 	}
 }
 
-program_args parse_program_args(int argc, const char *const argv[]) {
+run_options parse_run_options(int argc, const char *const argv[]) {
 	try {
-		program_args result;
-		string mode_str, int_precision_str, float_precision_str;
+		run_options result;
+		string mode_str, jobspec_str, int_precision_str, float_precision_str;
 		int threads = 0, blocksize = 0;
-		bool no_cuda = false, no_opencl = false;
+		bool no_cuda = false, no_opencl = false, quiet = false;
 
 		po::positional_options_description pos_opts;
 		pos_opts.add("mode", 1);
@@ -89,7 +91,7 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 		opts.add_options()
 			//positional args
 			("mode", po::value<string>(&mode_str)) //
-			("jobspecs", po::value<string>(&result.jobspecs)) //
+			("jobspecs", po::value<string>(&jobspec_str)) //
 			//regular args
 			("in", po::value<string>(&result.options.in1_path)) //
 			("in1", po::value<string>(&result.options.in1_path)) //
@@ -100,7 +102,8 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 			("no-cuda", po::bool_switch(&no_cuda)->default_value(false)) //
 			("no-opencl", po::bool_switch(&no_opencl)->default_value(false)) //
 			("int-precision", po::value<string>(&int_precision_str)->default_value("default")) //
-			("float-precision", po::value<string>(&float_precision_str)->default_value("default"));
+			("float-precision", po::value<string>(&float_precision_str)->default_value("default")) //
+			("quiet", po::bool_switch(&quiet)->default_value(false));
 
 		po::variables_map args;
 		try {
@@ -125,12 +128,14 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 			check_option_absent(args, "repr", "no-cuda");
 			check_option_absent(args, "repr", "no-opencl");
 
-			result.mode = program_mode::repr;
+			check_directory_output(result.options.out_path);
+
+			result.mode = run_mode::repr;
 			result.options.threads = threads;
 			result.options.int_precision = parse_int_precision(int_precision_str);
-			result.options.float_precision = parse_float_precision(program_mode::repr, float_precision_str);
-
-			check_directory_output(result.options.out_path);
+			result.options.float_precision = parse_float_precision(run_mode::repr, float_precision_str);
+			result.options.quiet = quiet;
+			result.jobs = parse_repr_jobs(jobspec_str);
 		} else if (mode_str == "dist") {
 			check_option_present(args, "jobspecs", "job");
 			check_option_present(args, "out");
@@ -147,15 +152,17 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 				check_option_absent(args, "dist", "in2", "in2", "when option 'in' is specified also");
 			}
 
-			result.mode = program_mode::dist;
+			check_directory_output(result.options.out_path);
+
+			result.mode = run_mode::dist;
 			result.options.threads = threads;
 			result.options.blocksize = blocksize;
 			result.options.use_cuda = !no_cuda;
 			result.options.use_opencl = !no_opencl;
 			result.options.int_precision = parse_int_precision(int_precision_str);
-			result.options.float_precision = parse_float_precision(program_mode::dist, float_precision_str);
-
-			check_directory_output(result.options.out_path);
+			result.options.float_precision = parse_float_precision(run_mode::dist, float_precision_str);
+			result.options.quiet = quiet;
+			result.jobs = parse_dist_jobs(jobspec_str);
 		} else if (mode_str == "resume") {
 			check_option_absent(args, "resume", "in1");
 			check_option_absent(args, "resume", "in2");
@@ -166,30 +173,17 @@ program_args parse_program_args(int argc, const char *const argv[]) {
 			check_option_absent(args, "resume", "int-precision");
 			check_option_absent(args, "resume", "float-precision");
 
-			result.mode = program_mode::resume;
+			result.mode = run_mode::resume;
 			result.options.threads = threads;
 			result.options.blocksize = blocksize;
 			result.options.use_cuda = !no_cuda;
 			result.options.use_opencl = !no_opencl;
+			result.options.quiet = quiet;
 
 			if (!args.count("in")) {
 				result.options.in1_path = defaults::resume_filename;
 			}
 			check_file_input(result.options.in1_path);
-		} else if (mode_str == "help") {
-			check_option_absent(args, "help", "jobspecs", "job");
-			check_option_absent(args, "help", "in");
-			check_option_absent(args, "help", "in1");
-			check_option_absent(args, "help", "in2");
-			check_option_absent(args, "help", "out");
-			check_option_absent(args, "help", "threads");
-			check_option_absent(args, "help", "blocksize");
-			check_option_absent(args, "help", "no-cuda");
-			check_option_absent(args, "help", "no-opencl");
-			check_option_absent(args, "help", "int-precision");
-			check_option_absent(args, "help", "float-precision");
-
-			result.mode = program_mode::help;
 		} else {
 			throw invalid_argument("The argument ('" + mode_str + "') for option 'mode' is invalid");
 		}

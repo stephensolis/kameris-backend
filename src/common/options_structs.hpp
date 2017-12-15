@@ -17,12 +17,16 @@ struct program_options {
 	std::string out_path;
 
 	unsigned threads;
-	unsigned blocksize;
 
-	bool use_cuda;
-	bool use_opencl;
 	element_type int_precision;
 	element_type float_precision;
+
+	bool quiet;
+
+	//currently unused
+	unsigned blocksize;
+	bool use_cuda;
+	bool use_opencl;
 };
 
 

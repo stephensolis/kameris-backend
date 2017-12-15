@@ -15,7 +15,8 @@ class ProgressBar {
 
  public:
 	explicit ProgressBar(uint64_t max_count, std::string message = "")
-		: msg(std::move(message)), curr_count(0), max_count(max_count), start_time(std::chrono::steady_clock::now()) {}
+			: msg(std::move(message)), curr_count(0), max_count(max_count),
+			  start_time(std::chrono::steady_clock::now()) {}
 	~ProgressBar();
 
 	void increment(uint64_t incr = 1);

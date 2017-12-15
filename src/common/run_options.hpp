@@ -7,7 +7,7 @@
 #include <boost/variant.hpp>
 #include "options_structs.hpp"
 
-enum class run_mode : uint8_t { repr, dist };
+enum class run_mode : uint8_t { repr, dist, resume };
 
 struct run_options {
 	run_mode mode;

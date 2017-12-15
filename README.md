@@ -44,6 +44,72 @@ Try putting some FASTA files in a directory `fasta`, creating a directory `outpu
 	mmg-cli repr cgr-k=9 --in fasta --out output
 	mmg-cli dist manhattan --in output/xxxxx --out output
 
+## Usage
+
+	Usage: mmg-cli <mode> <job>[,<job>...] [options]
+
+	Modes:
+	  repr     Generate vectors or matrices suitable for distance computations
+	  dist     Compute pairwise distance matrices
+	  resume   Resume an interrupted task
+	  help     Print a help message
+	  version  Print version information
+
+	Options:
+	  --in <path>
+	     Input file or directory
+	     (in mode 'dist', this produces a symmetric pairwise distance matrix for
+	      every pair of inputs in the given dataset)
+	  --in1, --in2 <path> [only mode 'dist']
+	     Input files or directories
+	     (in mode 'dist', this produces a pairwise distance matrix where rows
+	      correspond to inputs in 'in1' and columns correspond to inputs in 'in2')
+	  --out <path>
+	     Output file or directory
+	  --threads N
+	     Number of CPU threads to use [default: autodetect, all threads]
+	  --int-precision (8|16|32|64)
+	     Integer precision [default: 64]
+	  --float-precision (single|double)
+	     Floating-point precision
+	     [default: single ('dist' mode), double ('repr' mode)]
+	  --quiet
+	     Skip any interactive prompts
+
+	Jobs for 'repr' mode:
+	  Input as folders of FASTA files:
+	    cgr-k=N[-freq][-order=XXXX]   (Chaos Game Representation)
+	      Options:
+	        k           Length of the substrings to count
+	        freq        Use relative frequencies instead of occurrence counts
+	        order       Order of the labels (CW from bottom-left) [default: ACGT]
+	    sparsecgr-k=N[-freq][-order=XXXX]  (Sparse CGR)
+	      Options:
+	        k           Length of the substrings to count
+	        freq        Use relative frequencies instead of occurrence counts
+	        order       Order of the labels (CW from bottom-left) [default: ACGT]
+	    Note: if there are multiple sequences in the same FASTA file, representations
+	          will be computed for each sequence and added elementwise to produce
+	          one output per file.
+	  Input as a CGR-like representation:
+	    descr-bins=[N,...]-windows=[N,...]  (Descriptor)
+	      Options:
+	        bins     List of bin values
+	        windows  List of window sizes
+
+	Jobs for 'dist' mode:
+	  Input as any representation:
+	    euclidean           (Euclidean)
+	    sqeuclidean         (Squared Euclidean)
+	    manhattan           (Manhattan)
+	    cosine              (Cosine)
+	    pearson             (Pearson correlation coefficient)
+	    approxinfo[-est=X]  (Approximate Information distance)
+	      Options:
+	        est    Estimation formula (choices: A, B) [default: A]
+	  Input as any dense matrix representation:
+	    ssim  (Structural Similarity Index)
+
 ## Directory Structure
 
 - `libmmg`: A reusable header-only library for working with the representations and distances of this project
@@ -125,70 +191,6 @@ First run `cmake` as specified above, then run `make <target>` (on a Unix platfo
 - `check-format`: runs code style checks (_this requires `clang-format`, `diff`, and `perl`_)
 - `check-lint`: runs static analysis checks (_this requires `clang-tidy`, `grep`, and `perl`_)
 - `coverage`: computes line coverage for the tests in the `tests` directory, saving the result in [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) format as `coverage.info` (_this requires GCC as the compiler, `lcov`, and setting `-DCMAKE_BUILD_TYPE=Coverage`_)
-
-## Usage
-
-	Usage: mmg-cli <mode> <job>[,<job>...] [options]
-
-	Modes:
-	  repr     Generate vectors or matrices suitable for distance computations
-	  dist     Compute pairwise distance matrices
-	  resume   Resume an interrupted task
-	  help     Print a help message
-	  version  Print version information
-
-	Options:
-	  --in <path>
-	     Input file or directory
-	     (in mode 'dist', this produces a symmetric pairwise distance matrix for
-	      every pair of inputs in the given dataset)
-	  --in1, --in2 <path> [only mode 'dist']
-	     Input files or directories
-	     (in mode 'dist', this produces a pairwise distance matrix where rows
-	      correspond to inputs in 'in1' and columns correspond to inputs in 'in2')
-	  --out <path>
-	     Output file or directory
-	  --threads N
-	     Number of CPU threads to use [default: autodetect, all threads]
-	  --int-precision (8|16|32|64)
-	     Integer precision [default: 64]
-	  --float-precision (single|double)
-	     Floating-point precision
-	     [default: single ('dist' mode), double ('repr' mode)]
-
-	Jobs for 'repr' mode:
-	  Input as FASTA files:
-	    cgr-k=N[-freq][-order=XXXX]   (Chaos Game Representation)
-	      Options:
-	        k           Length of the substrings to count
-	        freq        Use relative frequencies instead of occurrence counts
-	        order       Order of the labels (CW from bottom-left) [default: ACGT]
-	    sparsecgr-k=N[-freq][-order=XXXX]  (Sparse CGR)
-	      Options:
-	        k           Length of the substrings to count
-	        freq        Use relative frequencies instead of occurrence counts
-	        order       Order of the labels (CW from bottom-left) [default: ACGT]
-	    Note: if there are multiple sequences in the same FASTA file, representations
-	          will be computed for each sequence and added elementwise to produce
-	          one output per file.
-	  Input as CGR-like representation:
-	    descr-bins=[N,...]-windows=[N,...]  (Descriptor)
-	      Options:
-	        bins     List of bin values
-	        windows  List of window sizes
-
-	Jobs for 'dist' mode:
-	  Input as any representation:
-	    euclidean           (Euclidean)
-	    sqeuclidean         (Squared Euclidean)
-	    manhattan           (Manhattan)
-	    cosine              (Cosine)
-	    pearson             (Pearson correlation coefficient)
-	    approxinfo[-est=X]  (Approximate Information distance)
-	      Options:
-	        est    Estimation formula (choices: A, B) [default: A]
-	  Input as any dense matrix representation:
-	    ssim  (Structural Similarity Index)
 
 ## License ![License](http://img.shields.io/:license-mit-blue.svg)
 

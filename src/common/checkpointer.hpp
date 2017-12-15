@@ -11,18 +11,23 @@ class Checkpointer {
 	struct state {
 		uint8_t stage_num;
 		uint32_t stage_pos;
+
+		inline bool is_initial() const {
+			return stage_num == 0;
+		}
 	};
 
  private:
-	std::fstream resume_file;
+	std::fstream file;
 	std::chrono::steady_clock::time_point last_write;
 
-	static const unsigned update_rate = 2000;
+	static constexpr unsigned update_rate = 2000;
 	void rewind();
+	void write_state(const state &curr_state);
 
  public:
-	void init_new(const std::string &filename);
-	state init_existing(const std::string &filename);
+	explicit Checkpointer(std::fstream &&resume_file, bool initialize_file = false);
+	state read_state();
 	void checkpoint(const state &curr_state);
 };
 

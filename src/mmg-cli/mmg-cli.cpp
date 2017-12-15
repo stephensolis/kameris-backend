@@ -8,7 +8,6 @@
 #include "args_parser.hpp"
 #include "console_marks.hpp"
 #include "exceptions.hpp"
-#include "jobspec_parsers.hpp"
 #include "progress_bar.hpp"
 #include "usage_strings.hpp"
 
@@ -17,33 +16,22 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	ios::sync_with_stdio(false);
 
-	if (argc == 2 && (argv[1] == "version"s || argv[1] == "--version"s)) {
+	if (argc == 2 && (argv[1] == "version"s || argv[1] == "--version"s || argv[1] == "-v"s)) {
 		cout << "mmg-cli " VERSION_LONG << endl;
 		return 0;
 	}
 
 	cout << "This is modmap-generator-cpp (mmg-cli) " VERSION_LONG "." << endl << endl;
 
+	if (argc == 2 && (argv[1] == "help"s || argv[1] == "--help"s || argv[1] == "-h"s)) {
+		usage::put_help(cout);
+		return 0;
+	}
+
 	try {
-		program_args args = parse_program_args(argc, argv);
+		run_options options = parse_run_options(argc, argv);
 
-		unique_ptr<executor> exec;
-		switch (args.mode) {
-			case program_mode::repr:
-				exec = execute_repr_jobs(args.options, parse_repr_jobs(args.jobspecs));
-				break;
-			case program_mode::dist:
-				exec = execute_dist_jobs(args.options, parse_dist_jobs(args.jobspecs));
-				break;
-			case program_mode::resume:
-				exec = execute_resume(args.options);
-				break;
-			case program_mode::help:
-				usage::put_help(cout);
-				return 0;
-		}
-
-		exec->run(
+		executor::build(options)->run(
 			[](const confirm_action_info &info) {
 				//on confirmation prompt
 				//(code here)

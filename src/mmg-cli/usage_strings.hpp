@@ -41,11 +41,13 @@ namespace usage {
 		"     Integer precision [default: 64]\n"
 		"  --float-precision (single|double)\n"
 		"     Floating-point precision\n"
-		"     [default: single ('dist' mode), double ('repr' mode)]\n";
+		"     [default: single ('dist' mode), double ('repr' mode)]\n"
+		"  --quiet\n"
+		"     Skip any interactive prompts\n";
 
 	static const std::string repr_jobs =
 		"Jobs for 'repr' mode:\n"
-		"  Input as FASTA files:\n"
+		"  Input as folders of FASTA files:\n"
 		"    cgr-k=N[-freq][-order=XXXX]   (Chaos Game Representation)\n"
 		//"    cgr-(k=N|spacedseed=M)[-freq][-order=XXXX]   (Chaos Game Representation)\n"
 		//"    krap-(k=N|spacedseed=M)[-order=XXXX]         (k-Relative Abundance Profile)\n"
@@ -68,7 +70,7 @@ namespace usage {
 		"    Note: if there are multiple sequences in the same FASTA file, representations\n"
 		"          will be computed for each sequence and added elementwise to produce\n"
 		"          one output per file.\n"
-		"  Input as CGR-like representation:\n"
+		"  Input as a CGR-like representation:\n"
 		"    descr-bins=[N,...]-windows=[N,...]  (Descriptor)\n"
 		"      Options:\n"
 		"        bins     List of bin values\n"

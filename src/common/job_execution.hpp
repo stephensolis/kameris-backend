@@ -45,9 +45,12 @@ using on_progress_t = std::function<void(const progress_info &)>;
 class executor {
  public:
 	executor() = default;
+	virtual ~executor() = default;
+
 	virtual void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start,
 		on_stage_change_t on_stage_change, on_progress_t on_progress) const = 0;
-	virtual ~executor() = default;
+
+	static std::unique_ptr<executor> build(const run_options &options);
 
 	//these should be handled on subclasses
 	executor(const executor &) = delete;
@@ -55,9 +58,5 @@ class executor {
 	executor(executor &&) = delete;
 	executor &operator=(executor &&) = delete;
 };
-
-std::unique_ptr<executor> execute_repr_jobs(const program_options &options, const std::vector<repr_options> &jobs);
-std::unique_ptr<executor> execute_dist_jobs(const program_options &options, const std::vector<dist_options> &jobs);
-std::unique_ptr<executor> execute_resume(const program_options &options);
 
 #endif
