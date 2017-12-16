@@ -8,7 +8,7 @@
 #include <boost/variant.hpp>
 
 #include "options_structs.hpp"
-#include "run_options.hpp"
+#include "run_args.hpp"
 
 enum class confirmation_type { overwrite_resume, high_memory };
 struct confirm_action_info {
@@ -17,7 +17,11 @@ struct confirm_action_info {
 };
 
 struct run_start_info {
-	run_options options;
+	run_args args;
+
+	unsigned in1_size = 0;
+	unsigned in2_size = 0;
+
 	uint64_t est_memory = 0;
 };
 
@@ -43,14 +47,16 @@ using on_stage_change_t = std::function<void(const stage_change_info &)>;
 using on_progress_t = std::function<void(const progress_info &)>;
 
 class executor {
- public:
+ protected:
 	executor() = default;
+
+ public:
 	virtual ~executor() = default;
 
 	virtual void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start,
 		on_stage_change_t on_stage_change, on_progress_t on_progress) const = 0;
 
-	static std::unique_ptr<executor> build(const run_options &options);
+	static std::unique_ptr<executor> build(const run_args &args);
 
 	//these should be handled on subclasses
 	executor(const executor &) = delete;

@@ -1,8 +1,8 @@
 #ifndef _CLI_ARGS_PARSER_
 #define _CLI_ARGS_PARSER_
 
-#include "../common/run_options.hpp"
+#include "../common/run_args.hpp"
 
-run_options parse_run_options(int argc, const char *const argv[]);
+run_args parse_run_args(int argc, const char *const argv[]);
 
 #endif

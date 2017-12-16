@@ -234,7 +234,7 @@ vector<JobOptions> parse_jobs(const string &jobspecs, const Parser &parser, cons
 			cerr << error_mark << ex.what() << endl << endl;
 			cerr << usage::main << endl << usage_str;
 			throw already_handled_error();
-		} catch (const x3::expectation_failure<std::string::const_iterator> &ex) {
+		} catch (const x3::expectation_failure<string::const_iterator> &ex) {
 			if (ex.which() == "eoi") {
 				cerr << error_mark << "Invalid job specification: unexpected value here: " << endl;
 			} else if (parsers::friendly_parser_names.count(ex.which())) {

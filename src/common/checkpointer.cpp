@@ -27,7 +27,7 @@ void Checkpointer::write_state(const state &curr_state) {
 	file.flush();
 }
 
-Checkpointer::Checkpointer(std::fstream &&resume_file, bool initialize_file) : file(move(resume_file)) {
+Checkpointer::Checkpointer(fstream &&resume_file, bool initialize_file) : file(move(resume_file)) {
 	if (initialize_file) {
 		file.seekp(0, ios::end);
 		write_state({});

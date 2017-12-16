@@ -1,5 +1,5 @@
-#ifndef _COMMON_RUN_OPTIONS_
-#define _COMMON_RUN_OPTIONS_
+#ifndef _COMMON_RUN_ARGS_
+#define _COMMON_RUN_ARGS_
 
 #include <istream>
 #include <ostream>
@@ -9,13 +9,13 @@
 
 enum class run_mode : uint8_t { repr, dist, resume };
 
-struct run_options {
+struct run_args {
 	run_mode mode;
-	program_options options;
+	run_options options;
 	boost::variant<std::vector<repr_options>, std::vector<dist_options>> jobs;
 };
 
-run_options read_run_options(std::istream &stream);
-void write_run_options(std::ostream &stream, const run_options &options);
+run_args read_run_args(std::istream &stream);
+void write_run_args(std::ostream &stream, const run_args &options);
 
 #endif

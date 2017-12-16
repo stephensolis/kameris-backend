@@ -9,7 +9,7 @@
 #include "../common/defaults.hpp"
 #include "../common/filesystem_checks.hpp"
 #include "../common/output_headers.hpp"
-#include "../common/run_options.hpp"
+#include "../common/run_args.hpp"
 
 #include "args_parser.hpp"
 #include "console_marks.hpp"
@@ -76,9 +76,9 @@ element_type parse_float_precision(run_mode mode, const string &precision_str) {
 	}
 }
 
-run_options parse_run_options(int argc, const char *const argv[]) {
+run_args parse_run_args(int argc, const char *const argv[]) {
 	try {
-		run_options result;
+		run_args result;
 		string mode_str, jobspec_str, int_precision_str, float_precision_str;
 		int threads = 0, blocksize = 0;
 		bool no_cuda = false, no_opencl = false, quiet = false;

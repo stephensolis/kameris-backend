@@ -14,7 +14,7 @@
 #include <cereal/types/vector.hpp>
 
 #include "options_structs.hpp"
-#include "run_options.hpp"
+#include "run_args.hpp"
 
 using namespace std;
 using namespace boost;
@@ -42,18 +42,18 @@ vector<To> convert_vector_type(const vector<From> &vect) {
 }
 
 template <class Archive>
-void serialize(Archive &archive, run_options &data) { // NOLINT
+void serialize(Archive &archive, run_args &data) { // NOLINT
 	archive(data.mode, data.options, data.jobs); // NOLINT
 }
 
 template <class Archive>
-void save(Archive &archive, const program_options &data) {
+void save(Archive &archive, const run_options &data) {
 	archive(data.in1_path, data.in2_path, data.out_path, static_cast<uint64_t>(data.threads), // NOLINT
 		static_cast<uint64_t>(data.blocksize), data.use_cuda, data.use_opencl, data.int_precision, // NOLINT
 		data.float_precision); // NOLINT
 }
 template <class Archive>
-void load(Archive &archive, program_options &data) { // NOLINT
+void load(Archive &archive, run_options &data) { // NOLINT
 	uint64_t store_threads;
 	uint64_t store_blocksize;
 
@@ -133,15 +133,15 @@ void load(Archive &archive, usm_options &data) { // NOLINT
 	}
 }
 
-run_options read_run_options(istream &stream) {
+run_args read_run_args(istream &stream) {
 	cereal::PortableBinaryInputArchive input_archive(stream);
 
-	run_options data;
+	run_args data;
 	input_archive(data);
 	return data;
 }
 
-void write_run_options(ostream &stream, const run_options &options) {
+void write_run_args(ostream &stream, const run_args &options) {
 	cereal::PortableBinaryOutputArchive output_archive(stream);
 
 	output_archive(options);

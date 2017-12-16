@@ -28,10 +28,14 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
+	bool is_resume = false;
 	try {
-		run_options options = parse_run_options(argc, argv);
+		run_args args = parse_run_args(argc, argv);
+		if (args.mode == run_mode::resume) {
+			is_resume = true;
+		}
 
-		executor::build(options)->run(
+		executor::build(args)->run(
 			[](const confirm_action_info &info) {
 				//on confirmation prompt
 				//(code here)
@@ -55,6 +59,11 @@ int main(int argc, char *argv[]) {
 		return 1;
 	} catch (const exception &ex) {
 		cerr << error_mark << "An unexpected error occurred: " << ex.what() << endl;
+		if (is_resume) {
+			cerr << error_mark
+				 << "This error may be caused by a corrupt resume file. Try deleting the resume file and trying again."
+				 << ex.what() << endl;
+		}
 		return 1;
 	}
 }

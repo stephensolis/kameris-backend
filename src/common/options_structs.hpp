@@ -11,7 +11,7 @@
 
 #include "output_headers.hpp"
 
-struct program_options {
+struct run_options {
 	std::string in1_path;
 	std::string in2_path;
 	std::string out_path;

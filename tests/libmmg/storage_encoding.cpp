@@ -26,9 +26,9 @@ using namespace mmg;
 	GIVEN("A " #type " NaN") {                                           \
 		WHEN("calling to_storage_encoding then from_storage_encoding") { \
 			THEN("the final result is still a NaN") {                    \
-				type original = std::numeric_limits<type>::quiet_NaN();  \
+				type original = numeric_limits<type>::quiet_NaN();       \
 				auto encoded = to_storage_encoding(original);            \
-				CHECK(std::isnan(from_storage_encoding<type>(encoded))); \
+				CHECK(isnan(from_storage_encoding<type>(encoded)));      \
 			}                                                            \
 		}                                                                \
 	}
@@ -50,10 +50,10 @@ SCENARIO("libmmg storage encoding", "[libmmg][io][storage_encoding]") {
 
 	TEST_STORAGE_ENCODING(float, 5.3f);
 	TEST_STORAGE_ENCODING(float, -5.3f);
-	TEST_STORAGE_ENCODING(float, std::numeric_limits<float>::infinity());
+	TEST_STORAGE_ENCODING(float, numeric_limits<float>::infinity());
 	TEST_STORAGE_ENCODING(double, 5.3);
 	TEST_STORAGE_ENCODING(double, -5.3);
-	TEST_STORAGE_ENCODING(double, std::numeric_limits<double>::infinity());
+	TEST_STORAGE_ENCODING(double, numeric_limits<double>::infinity());
 
 	TEST_STORAGE_ENCODING_NAN(float);
 	TEST_STORAGE_ENCODING_NAN(double);

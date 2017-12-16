@@ -3,6 +3,7 @@
 #include <fstream>
 #include <functional>
 #include <memory>
+#include <stdexcept>
 #include <typeinfo>
 #include <utility>
 #include <vector>
@@ -13,27 +14,29 @@
 #include "filesystem_checks.hpp"
 #include "job_execution.hpp"
 #include "options_structs.hpp"
-#include "run_options.hpp"
+#include "run_args.hpp"
 
 using namespace std;
 
+
 class repr_executor : public executor {
- private:
-	const program_options options;
+ protected:
+	const run_options options;
 	const vector<repr_options> jobs;
 	const Checkpointer::state start_state;
 
- public:
-	repr_executor(program_options in_options, vector<repr_options> in_jobs, Checkpointer::state in_start_state = {})
+	repr_executor(run_options in_options, vector<repr_options> in_jobs, Checkpointer::state in_start_state = {})
 			: options(std::move(in_options)), jobs(std::move(in_jobs)), start_state(in_start_state) {
 		assert(!jobs.empty());
+	}
+};
 
-		//check input format
-		if (jobs.front().type() == typeid(descr_options)) {
-			check_file_input(options.in1_path);
-		} else {
-			check_directory_input(options.in1_path);
-		}
+class cgrlike_repr_executor : public repr_executor {
+ public:
+	cgrlike_repr_executor(
+		const run_options &options, const vector<repr_options> &jobs, const Checkpointer::state &start_state = {})
+			: repr_executor(options, jobs, start_state) {
+		check_directory_input(options.in1_path);
 	}
 
 	void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start, on_stage_change_t on_stage_change,
@@ -42,28 +45,41 @@ class repr_executor : public executor {
 	}
 };
 
+class descr_repr_executor : public repr_executor {
+ public:
+	descr_repr_executor(
+		const run_options &options, const vector<repr_options> &jobs, const Checkpointer::state &start_state = {})
+			: repr_executor(options, jobs, start_state) {
+		check_file_input(options.in1_path);
+	}
+
+	void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start, on_stage_change_t on_stage_change,
+		/**/ on_progress_t on_progress) const override {
+		//(code here)
+	}
+};
+
+
 class dist_executor : public executor {
- private:
-	const program_options options;
+ protected:
+	const run_options options;
 	const vector<dist_options> jobs;
 	const Checkpointer::state start_state;
 
- public:
-	dist_executor(program_options in_options, vector<dist_options> in_jobs, Checkpointer::state in_start_state = {})
+	dist_executor(run_options in_options, vector<dist_options> in_jobs, Checkpointer::state in_start_state = {})
 			: options(std::move(in_options)), jobs(std::move(in_jobs)), start_state(in_start_state) {
 		assert(!jobs.empty());
+	}
+};
 
-		//check input format
-		if (jobs.front().type() == typeid(usm_options)) {
-			check_directory_input(options.in1_path);
-			if (!options.in2_path.empty()) {
-				check_directory_input(options.in2_path);
-			}
-		} else {
-			check_file_input(options.in1_path);
-			if (!options.in2_path.empty()) {
-				check_file_input(options.in2_path);
-			}
+class general_dist_executor : public dist_executor {
+ public:
+	general_dist_executor(
+		const run_options &options, const vector<dist_options> &jobs, const Checkpointer::state &start_state = {})
+			: dist_executor(options, jobs, start_state) {
+		check_file_input(options.in1_path);
+		if (!options.in2_path.empty()) {
+			check_file_input(options.in2_path);
 		}
 	}
 
@@ -73,38 +89,65 @@ class dist_executor : public executor {
 	}
 };
 
-unique_ptr<executor> executor_build_resume(const program_options &start_opts) {
-	fstream resume_file(start_opts.in1_path, ios::in | ios::out | ios::binary);
-	run_options run_opts = read_run_options(resume_file);
+class usm_dist_executor : public dist_executor {
+ public:
+	usm_dist_executor(
+		const run_options &options, const vector<dist_options> &jobs, const Checkpointer::state &start_state = {})
+			: dist_executor(options, jobs, start_state) {
+		check_directory_input(options.in1_path);
+		if (!options.in2_path.empty()) {
+			check_directory_input(options.in2_path);
+		}
 
-	run_opts.options.threads = start_opts.threads;
-	run_opts.options.blocksize = start_opts.blocksize;
-	run_opts.options.use_cuda = start_opts.use_cuda;
-	run_opts.options.use_opencl = start_opts.use_opencl;
-	run_opts.options.quiet = start_opts.quiet;
+		throw logic_error("USM distance is not implemented yet");
+	}
 
-	Checkpointer checkpointer(move(resume_file));
-	Checkpointer::state start_state = checkpointer.read_state();
+	void run(on_confirm_action_t /**/, on_run_start_t /**/, on_stage_change_t /**/, on_progress_t /**/) const override {
+		throw logic_error("USM distance is not implemented yet");
+	}
+};
 
-	switch (run_opts.mode) {
-		case run_mode::repr:
-			return make_unique<repr_executor>(run_opts.options, get<vector<repr_options>>(run_opts.jobs), start_state);
-		case run_mode::dist:
-			return make_unique<dist_executor>(run_opts.options, get<vector<dist_options>>(run_opts.jobs), start_state);
-		default:
-			throw invalid_argument("Invalid run mode, the resume file may be corrupt");
+
+unique_ptr<executor> make_executor(const run_args &args, const Checkpointer::state &start_state = {}) {
+	if (args.mode == run_mode::repr) {
+		const vector<repr_options> &jobs = get<vector<repr_options>>(args.jobs);
+		if (jobs.front().type() == typeid(descr_options)) {
+			return make_unique<descr_repr_executor>(args.options, jobs, start_state);
+		} else {
+			return make_unique<cgrlike_repr_executor>(args.options, jobs, start_state);
+		}
+	} else if (args.mode == run_mode::dist) {
+		const vector<dist_options> &jobs = get<vector<dist_options>>(args.jobs);
+		if (jobs.front().type() == typeid(usm_options)) {
+			return make_unique<usm_dist_executor>(args.options, jobs, start_state);
+		} else {
+			return make_unique<general_dist_executor>(args.options, jobs, start_state);
+		}
+	} else {
+		throw invalid_argument("Invalid run mode");
 	}
 }
 
-unique_ptr<executor> executor::build(const run_options &options) {
-	switch (options.mode) {
-		case run_mode::repr:
-			return make_unique<repr_executor>(options.options, get<vector<repr_options>>(options.jobs));
-		case run_mode::dist:
-			return make_unique<dist_executor>(options.options, get<vector<dist_options>>(options.jobs));
-		case run_mode::resume:
-			return executor_build_resume(options.options);
-		default:
-			throw invalid_argument("Invalid run mode");
+unique_ptr<executor> make_executor_for_resume(const run_options &start_opts) {
+	fstream resume_file(start_opts.in1_path, ios::in | ios::out | ios::binary);
+	run_args args = read_run_args(resume_file);
+
+	args.options.threads = start_opts.threads;
+	args.options.blocksize = start_opts.blocksize;
+	args.options.use_cuda = start_opts.use_cuda;
+	args.options.use_opencl = start_opts.use_opencl;
+	args.options.quiet = start_opts.quiet;
+
+	Checkpointer checkpointer(std::move(resume_file));
+	Checkpointer::state start_state = checkpointer.read_state();
+
+	return make_executor(args, start_state);
+}
+
+unique_ptr<executor> executor::build(const run_args &args) {
+	if (args.mode == run_mode::resume) {
+		return make_executor_for_resume(args.options);
+	} else {
+		return make_executor(args);
 	}
 }
