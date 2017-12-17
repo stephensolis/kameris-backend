@@ -2,7 +2,7 @@ Checks: "*,-clang-analyzer-alpha*,-*namespace-comment*,-google-build-using-names
     -llvm-include-order,-readability-implicit-bool-cast,-readability-else-after-return,-cert-err58-cpp,\
     -modernize-use-using,-cppcoreguidelines-pro-bounds-pointer-arithmetic,\
     -cppcoreguidelines-pro-bounds-array-to-pointer-decay,-llvm-header-guard,-hicpp-no-assembler,\
-    -readability-implicit-bool-conversion,-hicpp-no-array-decay,-fuchsia-default-arguments"
+    -readability-implicit-bool-conversion,-hicpp-no-array-decay,-fuchsia-default-arguments,-google-runtime-references"
 CheckOptions:
   - key: google-global-names-in-headers.HeaderFileExtensions
     value: h,hh,hpp,hxx

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <thread>
+#include <utility>
 
 #include "options_structs.hpp"
 #include "output_headers.hpp"
@@ -10,12 +11,14 @@
 namespace defaults {
 	static const unsigned threads = std::thread::hardware_concurrency();
 	static const unsigned blocksize = 50;
-	static const std::string cgr_order = "ACGT";
 	static const std::string resume_filename = "resumefile";
 
 	static const element_type int_precision = element_type::uint64;
 	static const element_type repr_float_precision = element_type::float64;
 	static const element_type dist_float_precision = element_type::float32;
+
+	static const std::string cgr_order = "ACGT";
+	static const std::pair<std::string, std::string> twocgr_order = {"AG", "CT"};
 
 	static const ::aid_formula aid_formula = ::aid_formula::A;
 }

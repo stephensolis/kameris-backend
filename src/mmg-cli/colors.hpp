@@ -21,7 +21,7 @@ namespace colors_impl {
 }
 
 #define DEF_COLOR(name, ansi_code, windows_code)                                 \
-	inline std::ostream &name(std::ostream &stream) { /* NOLINT */               \
+	inline std::ostream &name(std::ostream &stream) {                            \
 		WORD real_code = (windows_code) | colors_impl::default_background_attrs; \
 		if (&stream == &std::cout && _isatty(_fileno(stdout))) {                 \
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), real_code); \
@@ -34,7 +34,7 @@ namespace colors_impl {
 #include <unistd.h>
 
 #define DEF_COLOR(name, ansi_code, windows_code)                                                                      \
-	inline std::ostream &name(std::ostream &stream) { /* NOLINT */                                                    \
+	inline std::ostream &name(std::ostream &stream) {                                                                 \
 		if ((&stream == &std::cout && isatty(fileno(stdout))) || (&stream == &std::cerr && isatty(fileno(stderr)))) { \
 			stream << "\033[" #ansi_code;                                                                             \
 		}                                                                                                             \

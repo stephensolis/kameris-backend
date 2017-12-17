@@ -110,14 +110,14 @@ class usm_dist_executor : public dist_executor {
 
 unique_ptr<executor> make_executor(const run_args &args, const Checkpointer::state &start_state = {}) {
 	if (args.mode == run_mode::repr) {
-		const vector<repr_options> &jobs = get<vector<repr_options>>(args.jobs);
+		const auto &jobs = get<vector<repr_options>>(args.jobs);
 		if (jobs.front().type() == typeid(descr_options)) {
 			return make_unique<descr_repr_executor>(args.options, jobs, start_state);
 		} else {
 			return make_unique<cgrlike_repr_executor>(args.options, jobs, start_state);
 		}
 	} else if (args.mode == run_mode::dist) {
-		const vector<dist_options> &jobs = get<vector<dist_options>>(args.jobs);
+		const auto &jobs = get<vector<dist_options>>(args.jobs);
 		if (jobs.front().type() == typeid(usm_options)) {
 			return make_unique<usm_dist_executor>(args.options, jobs, start_state);
 		} else {

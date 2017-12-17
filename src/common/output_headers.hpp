@@ -12,10 +12,7 @@ enum class element_type : uint8_t {
 };
 // clang-format on
 
-enum class repr_type : uint8_t { cgr, krap, cv, descriptor };
-
 struct repr_header {
-	repr_type type;
 	uint8_t /*(bool)*/ is_sparse;
 	element_type key_type;
 	element_type value_type;

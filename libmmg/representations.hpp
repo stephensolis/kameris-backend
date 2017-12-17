@@ -3,5 +3,6 @@
 
 #include "representations/cgr.hpp"
 #include "representations/descriptor.hpp"
+#include "representations/twocgr.hpp"
 
 #endif

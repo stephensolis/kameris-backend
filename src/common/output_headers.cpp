@@ -11,16 +11,12 @@
 using namespace std;
 using namespace mmg;
 
-repr_header read_repr_header(istream &stream) {
-	using repr_underlying_t = typename underlying_type<repr_type>::type;
-	using element_underlying_t = typename underlying_type<element_type>::type;
+using element_underlying_t = typename underlying_type<element_type>::type;
 
+repr_header read_repr_header(istream &stream) {
 	repr_header result{};
-	repr_underlying_t repr_val = 0;
 	element_underlying_t key_val = 0, value_val = 0;
 
-	read_binary_raw(stream, repr_val);
-	result.type = static_cast<repr_type>(from_storage_encoding<decltype(repr_val)>(repr_val));
 	read_binary_raw(stream, result.is_sparse);
 	result.is_sparse = from_storage_encoding<decltype(result.is_sparse)>(result.is_sparse);
 	read_binary_raw(stream, key_val);
@@ -38,10 +34,6 @@ repr_header read_repr_header(istream &stream) {
 }
 
 void write_repr_header(ostream &stream, const repr_header &header) {
-	using repr_underlying_t = typename underlying_type<repr_type>::type;
-	using element_underlying_t = typename underlying_type<element_type>::type;
-
-	write_binary_raw(stream, to_storage_encoding(static_cast<repr_underlying_t>(header.type)));
 	write_binary_raw(stream, to_storage_encoding(header.is_sparse));
 	write_binary_raw(stream, to_storage_encoding(static_cast<element_underlying_t>(header.key_type)));
 	write_binary_raw(stream, to_storage_encoding(static_cast<element_underlying_t>(header.value_type)));
@@ -51,8 +43,6 @@ void write_repr_header(ostream &stream, const repr_header &header) {
 }
 
 dist_header read_dist_header(istream &stream) {
-	using element_underlying_t = typename underlying_type<element_type>::type;
-
 	dist_header result{};
 	element_underlying_t value_val = 0;
 
@@ -65,8 +55,6 @@ dist_header read_dist_header(istream &stream) {
 }
 
 void write_dist_header(ostream &stream, const dist_header &header) {
-	using element_underlying_t = typename underlying_type<element_type>::type;
-
 	write_binary_raw(stream, to_storage_encoding(static_cast<element_underlying_t>(header.value_type)));
 	write_binary_raw(stream, to_storage_encoding(header.size));
 }

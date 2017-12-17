@@ -16,7 +16,7 @@ SCENARIO("libmmg FASTA", "[libmmg][io][fasta]") {
 
 		WHEN("calling read_fasta") {
 			THEN("the result is empty") {
-				CHECK((read_fasta(stream).empty()));
+				CHECK(read_fasta(stream).empty());
 			}
 		}
 	}
@@ -26,7 +26,7 @@ SCENARIO("libmmg FASTA", "[libmmg][io][fasta]") {
 
 		WHEN("calling read_fasta") {
 			THEN("the result is empty") {
-				CHECK((read_fasta(stream).empty()));
+				CHECK(read_fasta(stream).empty());
 			}
 		}
 	}
@@ -36,7 +36,7 @@ SCENARIO("libmmg FASTA", "[libmmg][io][fasta]") {
 
 		WHEN("calling read_fasta") {
 			THEN("the result contains the sequence") {
-				CHECK((read_fasta(stream) == vector<string>{"test1"}));
+				CHECK(read_fasta(stream) == vector<string>{"test1"});
 			}
 		}
 	}
@@ -46,7 +46,7 @@ SCENARIO("libmmg FASTA", "[libmmg][io][fasta]") {
 
 		WHEN("calling read_fasta") {
 			THEN("the result contains the sequences") {
-				CHECK((read_fasta(stream) == vector<string>{"test1", "test2"}));
+				CHECK(read_fasta(stream) == vector<string>{"test1", "test2"});
 			}
 		}
 	}
@@ -56,7 +56,7 @@ SCENARIO("libmmg FASTA", "[libmmg][io][fasta]") {
 
 		WHEN("calling read_fasta") {
 			THEN("the result contains the sequences") {
-				CHECK((read_fasta(stream) == vector<string>{"test1", "test2"}));
+				CHECK(read_fasta(stream) == vector<string>{"test1", "test2"});
 			}
 		}
 	}

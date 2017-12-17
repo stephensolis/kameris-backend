@@ -37,27 +37,6 @@ namespace mmg {
 				}
 			}
 		}
-
-		template <typename Index, typename Container, typename Seq, typename Vect>
-		inline void fill_twocgr(Container &result, const Seq &seq, unsigned int k, const Vect &order) {
-			Index x = (Index(1) << (k - 1)); //x = 2^(k-1)
-
-			for (size_t i = 0; i < seq.size(); ++i) {
-				//skip sequence entries not in order
-				if (seq[i] != order[0] && seq[i] != order[1]) {
-					continue;
-				}
-
-				x >>= 1; //x /= 2
-				if (seq[i] == order[1]) {
-					x |= (Index(1) << (k - 1)); //x += 2^(k-1)
-				}
-
-				if (i >= k - 1) {
-					++result[x];
-				}
-			}
-		}
 	}
 
 	template <typename Count = uint32_t, typename Seq, typename Vect = const char *>
@@ -83,33 +62,6 @@ namespace mmg {
 
 		Map<Index, Count> result;
 		cgr_impl::fill_cgr<Index>(result, seq, k, order);
-
-		return result;
-	}
-
-	template <typename Count = uint32_t, typename Seq, typename Vect = const char *>
-	inline std::vector<Count> twocgr(const Seq &seq, unsigned int k, const Vect &order = "AB") {
-		using Index = typename std::vector<Count>::size_type;
-
-		if (k > CHAR_BIT * sizeof(Index)) {
-			throw std::invalid_argument("k is too large to fit in the index");
-		}
-
-		std::vector<Count> result(Index(1) << k, 0); //2^k entries
-		cgr_impl::fill_twocgr<Index>(result, seq, k, order);
-
-		return result;
-	}
-
-	template <typename Count = uint32_t, typename Index = uint64_t,
-		template <typename, typename, typename...> class Map = std::map, typename Seq, typename Vect = const char *>
-	inline Map<Index, Count> sparse_twocgr(const Seq &seq, unsigned int k, const Vect &order = "AB") {
-		if (k > CHAR_BIT * sizeof(Index)) {
-			throw std::invalid_argument("k is too large to fit in the index");
-		}
-
-		Map<Index, Count> result;
-		cgr_impl::fill_twocgr<Index>(result, seq, k, order);
 
 		return result;
 	}

@@ -1,9 +1,9 @@
 #include <functional>
 #include <iostream>
-#include <map>
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
+#include <unordered_map>
 
 //ugly workaround for clang-cl on Windows
 #if defined(__clang__) && defined(_MSC_VER)
@@ -16,6 +16,7 @@
 #include <boost/algorithm/cxx11/any_of.hpp>
 #include <boost/algorithm/cxx11/is_sorted.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/fusion/include/std_pair.hpp>
 #include <boost/optional.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <boost/tokenizer.hpp>
@@ -35,18 +36,31 @@ namespace x3 = boost::spirit::x3;
 //definitions are like this to avoid use of Boost.Typeof and Boost.Preprocessor,
 //which don't work with Intel's compiler on Windows
 BOOST_FUSION_ADAPT_STRUCT( //
-	cgrlike_options, //
-	(decltype(cgrlike_options().repr), repr) //
-	(decltype(cgrlike_options().k_or_spacedseed), k_or_spacedseed) //
-	(decltype(cgrlike_options().use_freq), use_freq) //
-	(decltype(cgrlike_options().order), order))
+	regular_cgrlike_options, //
+	(decltype(regular_cgrlike_options().repr), repr) //
+	(decltype(regular_cgrlike_options().k_or_spacedseed), k_or_spacedseed) //
+	(decltype(regular_cgrlike_options().use_freq), use_freq) //
+	(decltype(regular_cgrlike_options().order), order))
 BOOST_FUSION_ADAPT_STRUCT( //
-	sparse_cgrlike_options, //
-	(decltype(sparse_cgrlike_options().repr), repr) //
-	(decltype(sparse_cgrlike_options().k_or_spacedseed), k_or_spacedseed) //
-	(decltype(sparse_cgrlike_options().use_freq), use_freq) //
-	(decltype(sparse_cgrlike_options().order), order) //
-	(decltype(sparse_cgrlike_options().freqcut), freqcut))
+	twocgrlike_options, //
+	(decltype(twocgrlike_options().repr), repr) //
+	(decltype(twocgrlike_options().k_or_spacedseed), k_or_spacedseed) //
+	(decltype(twocgrlike_options().use_freq), use_freq) //
+	(decltype(twocgrlike_options().order), order))
+BOOST_FUSION_ADAPT_STRUCT( //
+	sparse_regular_cgrlike_options, //
+	(decltype(sparse_regular_cgrlike_options().repr), repr) //
+	(decltype(sparse_regular_cgrlike_options().k_or_spacedseed), k_or_spacedseed) //
+	(decltype(sparse_regular_cgrlike_options().use_freq), use_freq) //
+	(decltype(sparse_regular_cgrlike_options().order), order) //
+	(decltype(sparse_regular_cgrlike_options().freqcut), freqcut))
+BOOST_FUSION_ADAPT_STRUCT( //
+	sparse_twocgrlike_options, //
+	(decltype(sparse_twocgrlike_options().repr), repr) //
+	(decltype(sparse_twocgrlike_options().k_or_spacedseed), k_or_spacedseed) //
+	(decltype(sparse_twocgrlike_options().use_freq), use_freq) //
+	(decltype(sparse_twocgrlike_options().order), order) //
+	(decltype(sparse_twocgrlike_options().freqcut), freqcut))
 BOOST_FUSION_ADAPT_STRUCT( //
 	descr_options, //
 	(decltype(descr_options().bins), bins) //
@@ -77,31 +91,52 @@ namespace parsers {
 	const auto cgr_start = x3::lit("cgr") > x3::attr(repr_type::cgr);
 	const auto krap_start = x3::lit("krap") > x3::attr(repr_type::krap);
 	const auto cv_start = x3::lit("cv") > x3::attr(repr_type::cv);
+	const auto twocgr_start = x3::lit("twocgr") > x3::attr(repr_type::twocgr);
+	const auto twokrap_start = x3::lit("twokrap") > x3::attr(repr_type::twokrap);
+	const auto twocv_start = x3::lit("twocv") > x3::attr(repr_type::twocv);
 	const auto sparsecgr_start = x3::lit("sparsecgr") > x3::attr(repr_type::cgr);
 	const auto sparsekrap_start = x3::lit("sparsekrap") > x3::attr(repr_type::krap);
 	const auto sparsecv_start = x3::lit("sparsecv") > x3::attr(repr_type::cv);
-	const auto cgrlike_k_or_spacedseed = (x3::lit("-k=") > x3::uint_) | (x3::lit("-spacedseed=") > +binary_val);
+	const auto sparsetwocgr_start = x3::lit("sparsetwocgr") > x3::attr(repr_type::twocgr);
+	const auto sparsetwokrap_start = x3::lit("sparsetwokrap") > x3::attr(repr_type::twokrap);
+	const auto sparsetwocv_start = x3::lit("sparsetwocv") > x3::attr(repr_type::twocv);
+
+	const auto cgrlike_spacedseed = x3::repeat(1, 32)[binary_val];
+	const auto cgrlike_k_or_spacedseed = (x3::lit("-k=") > x3::uint8) | (x3::lit("-spacedseed=") > cgrlike_spacedseed);
 	const auto cgr_freq = (x3::lit("-freq") > x3::attr(true)) | x3::attr(false);
-	const auto cgrlike_order_str = x3::repeat(2)[x3::upper] | x3::repeat(4)[x3::upper];
+	const auto cgrlike_order_str = x3::repeat(4)[x3::upper];
 	const auto cgrlike_order = (x3::lit("-order=") > cgrlike_order_str) | x3::attr(defaults::cgr_order);
+	const auto twocgrlike_order_str = +x3::upper;
+	const auto twocgrlike_order = (x3::lit("-order={") > twocgrlike_order_str > ',' > twocgrlike_order_str > '}') |
+		(x3::attr(defaults::twocgr_order));
 	const auto sparse_cgrlike_freqcut = (x3::lit("-freqcut=") > nonnegative_double) | x3::attr(double(0));
 
 	const auto cgr_jobspec = cgr_start > cgrlike_k_or_spacedseed > cgr_freq > cgrlike_order;
 	const auto krap_cv_jobspec = //
 		(krap_start | cv_start) > cgrlike_k_or_spacedseed > x3::attr(false) > cgrlike_order;
+	const auto twocgr_jobspec = twocgr_start > cgrlike_k_or_spacedseed > cgr_freq > twocgrlike_order;
+	const auto twokrap_cv_jobspec = //
+		(twokrap_start | twocv_start) > cgrlike_k_or_spacedseed > x3::attr(false) > twocgrlike_order;
+
 	const auto sparsecgr_jobspec = //
 		sparsecgr_start > cgrlike_k_or_spacedseed > cgr_freq > cgrlike_order > sparse_cgrlike_freqcut;
 	const auto sparsekrap_cv_jobspec = //
 		(sparsekrap_start | sparsecv_start) //
 		> cgrlike_k_or_spacedseed > x3::attr(false) > cgrlike_order > sparse_cgrlike_freqcut;
+	const auto sparsetwocgr_jobspec = //
+		sparsetwocgr_start > cgrlike_k_or_spacedseed > cgr_freq > twocgrlike_order > sparse_cgrlike_freqcut;
+	const auto sparsetwokrap_cv_jobspec = //
+		(sparsetwokrap_start | sparsetwocv_start) //
+		> cgrlike_k_or_spacedseed > x3::attr(false) > twocgrlike_order > sparse_cgrlike_freqcut;
 
 	const auto descr_bins_list = nonnegative_double % ',';
-	const auto descr_windows_list = x3::uint_ % ',';
+	const auto descr_windows_list = x3::uint64 % ',';
 	const auto descr_jobspec = //
-		x3::lit("descr") > "-bins=" > '[' > descr_bins_list > ']' > "-windows=" > '[' > descr_windows_list > ']';
+		x3::lit("descr") > "-bins=" > '{' > descr_bins_list > '}' > "-windows=" > '{' > descr_windows_list > '}';
 
 	const auto repr_jobspec_def = //
-		cgr_jobspec | krap_cv_jobspec | sparsecgr_jobspec | sparsekrap_cv_jobspec | descr_jobspec;
+		cgr_jobspec | krap_cv_jobspec | twocgr_jobspec | twokrap_cv_jobspec | sparsecgr_jobspec |
+		sparsekrap_cv_jobspec | sparsetwocgr_jobspec | sparsetwokrap_cv_jobspec | descr_jobspec;
 	const auto repr_jobspec = x3::rule<struct repr_jobspec_class, repr_options, true>{} = //
 		x3::eps > repr_jobspec_def > x3::eoi;
 
@@ -149,7 +184,7 @@ namespace parsers {
 	} usm_compr_mode;
 
 	const auto aid_est = (x3::lit("-est=") > aid_est_formula) | x3::attr(defaults::aid_formula);
-	const auto usm_level = -(x3::lit("-level=") > x3::uint_);
+	const auto usm_level = -(x3::lit("-level=") > x3::uint8);
 
 	const auto otherdist_jobspec = x3::rule<struct otherdist_jobspec_class, otherdist_options, true>{} = dist_mode;
 	const auto aid_jobspec = x3::rule<struct aid_jobspec_class, aid_options, true>{} = "approxinfo" > aid_est;
@@ -162,19 +197,21 @@ namespace parsers {
 	/*
 	 * Error handling
 	 */
-	const map<string, string> friendly_parser_names = {
+	const unordered_map<string, string> friendly_parser_names = {
 		//common
 		{typeid(binary_val).name(), "0 or 1"}, //
-		{typeid(+binary_val).name(), "0 or 1"}, //
-		{typeid(x3::uint_).name(), "a positive integer"}, //
+		{typeid(cgrlike_spacedseed).name(), "0 or 1"}, //
+		{typeid(x3::uint8).name(), "a positive integer"}, //
+		{typeid(x3::uint64).name(), "a positive integer"}, //
 		{typeid(nonnegative_double).name(), "a positive number"},
 		//repr-mode
-		{typeid(repr_jobspec_def).name(), R"("cgr" or "sparsecgr" or "descr")"},
+		{typeid(repr_jobspec_def).name(), R"("[sparse][two]cgr" or "descr")"},
 		/*{typeid(repr_jobspec_def).name(),
-			R"("cgr" or "krap" or "cv" or "sparsecgr" or "sparsekrap" or "sparsecv" or "descr")"},*/
+			R"("[sparse][two]cgr" or "[sparse][two]krap" or "[sparse][two]cv" or "descr")"},*/
 		{typeid(cgrlike_k_or_spacedseed).name(), R"("-k=")"},
 		/*{typeid(cgrlike_k_or_spacedseed).name(), R"("-k=" or "-spacedseed=")"},*/
-		{typeid(cgrlike_order_str).name(), "2 or 4 uppercase letters"},
+		{typeid(cgrlike_order_str).name(), "4 uppercase letters"},
+		{typeid(twocgrlike_order_str).name(), "an uppercase letter"},
 		{typeid(descr_bins_list).name(), "an increasing, comma-separated list of positive numbers"},
 		{typeid(descr_windows_list).name(), "a comma-separated list of positive integers"},
 		//dist-mode
@@ -200,9 +237,9 @@ struct jobspec_list_separator {
 			if (*next == ',' && !in_brackets) {
 				++next;
 				return true;
-			} else if (*next == '[') {
+			} else if (*next == '{') {
 				in_brackets = true;
-			} else if (*next == ']') {
+			} else if (*next == '}') {
 				in_brackets = false;
 			}
 
@@ -259,6 +296,18 @@ vector<JobOptions> parse_jobs(const string &jobspecs, const Parser &parser, cons
 	return jobs;
 }
 
+void check_k_or_spacedseed(const variant<uint8_t, vector<bool>> &k_or_spacedseed) {
+	if (k_or_spacedseed.type() == typeid(uint8_t) &&
+		/**/ (get<uint8_t>(k_or_spacedseed) < 1 || get<uint8_t>(k_or_spacedseed) > 32)) {
+		throw invalid_argument("Value for parameter 'k' must be between 1 and 32");
+	}
+}
+void check_freqcut(const double freqcut) {
+	if (freqcut <= 0) {
+		throw invalid_argument("Value for parameter 'freqcut' must be greater than 0");
+	}
+}
+
 vector<repr_options> parse_repr_jobs(const string &jobspecs) {
 	return parse_jobs<repr_options>(jobspecs, parsers::repr_jobspec, usage::repr_jobs,
 		[](const repr_options &curr_job, const vector<repr_options> &jobs, const string &jobspec) {
@@ -266,27 +315,26 @@ vector<repr_options> parse_repr_jobs(const string &jobspecs) {
 				throw invalid_argument("Input type for job type 'descr' conflicts with other given jobs");
 			}
 			try {
-				if (curr_job.type() == typeid(cgrlike_options)) {
-					auto curr_cgrlike_job = get<cgrlike_options>(curr_job);
-					if (curr_cgrlike_job.k_or_spacedseed.type() == typeid(unsigned) &&
-						/**/ get<unsigned>(curr_cgrlike_job.k_or_spacedseed) < 1) {
-						throw invalid_argument("Value for parameter 'k' must be at least 1");
-					}
-				} else if (curr_job.type() == typeid(sparse_cgrlike_options)) {
-					auto curr_sparse_cgrlike_job = get<sparse_cgrlike_options>(curr_job);
-					if (curr_sparse_cgrlike_job.k_or_spacedseed.type() == typeid(unsigned) &&
-						/**/ get<unsigned>(curr_sparse_cgrlike_job.k_or_spacedseed) < 1) {
-						throw invalid_argument("Value for parameter 'k' must be at least 1");
-					}
-					if (curr_sparse_cgrlike_job.freqcut <= 0) {
-						throw invalid_argument("Value for parameter 'freqcut' must be greater than 0");
-					}
+				if (curr_job.type() == typeid(regular_cgrlike_options)) {
+					const auto &curr_cgrlike_job = get<regular_cgrlike_options>(curr_job);
+					check_k_or_spacedseed(curr_cgrlike_job.k_or_spacedseed);
+				} else if (curr_job.type() == typeid(twocgrlike_options)) {
+					const auto &curr_cgrlike_job = get<twocgrlike_options>(curr_job);
+					check_k_or_spacedseed(curr_cgrlike_job.k_or_spacedseed);
+				} else if (curr_job.type() == typeid(sparse_regular_cgrlike_options)) {
+					const auto &curr_sparse_cgrlike_job = get<sparse_regular_cgrlike_options>(curr_job);
+					check_k_or_spacedseed(curr_sparse_cgrlike_job.k_or_spacedseed);
+					check_freqcut(curr_sparse_cgrlike_job.freqcut);
+				} else if (curr_job.type() == typeid(sparse_twocgrlike_options)) {
+					const auto &curr_sparse_cgrlike_job = get<sparse_twocgrlike_options>(curr_job);
+					check_k_or_spacedseed(curr_sparse_cgrlike_job.k_or_spacedseed);
+					check_freqcut(curr_sparse_cgrlike_job.freqcut);
 				} else if (curr_job.type() == typeid(descr_options)) {
-					auto curr_descr_job = get<descr_options>(curr_job);
+					const auto &curr_descr_job = get<descr_options>(curr_job);
 					if (boost::algorithm::any_of(curr_descr_job.bins, [](double bin) { return bin <= 0; })) {
 						throw invalid_argument("Values for parameter 'bins' must be greater than 0");
 					}
-					if (boost::algorithm::any_of(curr_descr_job.windows, [](unsigned window) { return window < 1; })) {
+					if (boost::algorithm::any_of(curr_descr_job.windows, [](uint64_t window) { return window < 1; })) {
 						throw invalid_argument("Values for parameter 'windows' must be at least 1");
 					}
 					if (!boost::algorithm::is_sorted(curr_descr_job.bins, std::less<>())) {

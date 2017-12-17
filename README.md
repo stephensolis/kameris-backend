@@ -83,16 +83,26 @@ Try putting some FASTA files in a directory `fasta`, creating a directory `outpu
 	        k           Length of the substrings to count
 	        freq        Use relative frequencies instead of occurrence counts
 	        order       Order of the labels (CW from bottom-left) [default: ACGT]
+	    twocgr-k=N[-freq][-order={X[...],X[...]}]   (2-state CGR)
+	      Options:
+	        k           Length of the substrings to count
+	        freq        Use relative frequencies instead of occurrence counts
+	        order       Order of the labels (left, then right) [default: AG,CT]
 	    sparsecgr-k=N[-freq][-order=XXXX]  (Sparse CGR)
 	      Options:
 	        k           Length of the substrings to count
 	        freq        Use relative frequencies instead of occurrence counts
 	        order       Order of the labels (CW from bottom-left) [default: ACGT]
-	    Note: if there are multiple sequences in the same FASTA file, representations
-	          will be computed for each sequence and added elementwise to produce
-	          one output per file.
-	  Input as a CGR-like representation:
-	    descr-bins=[N,...]-windows=[N,...]  (Descriptor)
+	    sparsetwocgr-k=N[-freq][-order={X[...],X[...]}]  (Sparse 2-state CGR)
+	      Options:
+	        k           Length of the substrings to count
+	        freq        Use relative frequencies instead of occurrence counts
+	        order       Order of the labels (left, then right) [default: AG,CT]
+	    Note: if there are multiple sequences in the same FASTA file,
+	          representations will be computed for each sequence and added
+	          elementwise to produce one output per file.
+	  Input as any dense matrix representation:
+	    descr-bins={N,...}-windows={N,...}  (Descriptor)
 	      Options:
 	        bins     List of bin values
 	        windows  List of window sizes
