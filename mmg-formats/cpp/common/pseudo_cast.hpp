@@ -1,5 +1,5 @@
-#ifndef _LIBMMG_PSEUDO_CAST_
-#define _LIBMMG_PSEUDO_CAST_
+#ifndef _MMG_FORMATS_COMMON_PSEUDO_CAST_
+#define _MMG_FORMATS_COMMON_PSEUDO_CAST_
 
 #include <cstring>
 

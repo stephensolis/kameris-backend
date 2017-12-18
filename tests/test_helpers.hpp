@@ -1,5 +1,5 @@
-#ifndef _TESTS_LIBMMG_HELPERS_
-#define _TESTS_LIBMMG_HELPERS_
+#ifndef _TESTS_TEST_HELPERS_
+#define _TESTS_TEST_HELPERS_
 
 #include <cmath>
 #include <limits>

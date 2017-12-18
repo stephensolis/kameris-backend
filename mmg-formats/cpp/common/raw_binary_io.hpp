@@ -1,5 +1,5 @@
-#ifndef _LIBMMG_IO_BINARY_
-#define _LIBMMG_IO_BINARY_
+#ifndef _MMG_FORMATS_COMMON_RAW_BINARY_IO_
+#define _MMG_FORMATS_COMMON_RAW_BINARY_IO_
 
 #include <istream>
 #include <ostream>

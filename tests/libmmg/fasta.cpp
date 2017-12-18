@@ -3,14 +3,14 @@
 #include <sstream>
 #include <string>
 
-#include <libmmg/io/fasta.hpp>
+#include <libmmg/utils/fasta.hpp>
 
-#include "test_helpers.hpp"
+#include "../test_helpers.hpp"
 
 using namespace std;
 using namespace mmg;
 
-SCENARIO("libmmg FASTA", "[libmmg][io][fasta]") {
+SCENARIO("libmmg FASTA", "[libmmg][utils][fasta]") {
 	GIVEN("An empty stream") {
 		istringstream stream("");
 

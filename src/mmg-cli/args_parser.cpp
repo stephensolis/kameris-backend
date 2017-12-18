@@ -6,9 +6,9 @@
 
 #include <boost/program_options.hpp>
 
+#include <mmg-formats/cpp/headers.hpp>
 #include "../common/defaults.hpp"
 #include "../common/filesystem_checks.hpp"
-#include "../common/output_headers.hpp"
 #include "../common/run_args.hpp"
 
 #include "args_parser.hpp"
@@ -19,6 +19,7 @@
 
 namespace po = boost::program_options;
 using namespace std;
+using namespace mmg;
 
 void check_option_present(const po::variables_map &args, const string &opt_name, const string &opt_display_name = "") {
 	if (!args.count(opt_name)) {

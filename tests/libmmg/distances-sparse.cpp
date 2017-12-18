@@ -5,9 +5,9 @@
 #include <stdexcept>
 
 #include <libmmg/distances-sparse.hpp>
-#include <libmmg/io/adapters.hpp>
+#include <libmmg/utils/matrix_vector_adapters.hpp>
 
-#include "test_helpers.hpp"
+#include "../test_helpers.hpp"
 
 using namespace std;
 using namespace mmg;

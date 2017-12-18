@@ -6,7 +6,7 @@
 #include <memory>
 #include <stdexcept>
 
-#include "../io/adapters.hpp"
+#include "../utils/matrix_vector_adapters.hpp"
 
 namespace mmg {
 	namespace ssim_impl {

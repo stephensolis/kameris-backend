@@ -5,15 +5,15 @@
 #include <sstream>
 #include <vector>
 
-#include <libmmg/io/binary.hpp>
-#include <libmmg/io/binary_collections.hpp>
+#include <mmg-formats/cpp/common/binary_collection_io.hpp>
+#include <mmg-formats/cpp/common/raw_binary_io.hpp>
 
-#include "test_helpers.hpp"
+#include "../test_helpers.hpp"
 
 using namespace std;
 using namespace mmg;
 
-SCENARIO("libmmg binary IO", "[libmmg][io][binary]") {
+SCENARIO("mmg-formats binary IO", "[mmg-formats][common][binary]") {
 	GIVEN("An integer") {
 		WHEN("calling write_binary_raw then read_binary_raw") {
 			THEN("the original value is returned") {

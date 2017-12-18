@@ -10,7 +10,7 @@
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
 
-#include "output_headers.hpp"
+#include <mmg-formats/cpp/headers.hpp>
 
 struct run_options {
 	std::string in1_path;
@@ -19,8 +19,8 @@ struct run_options {
 
 	unsigned threads;
 
-	element_type int_precision;
-	element_type float_precision;
+	mmg::element_type int_precision;
+	mmg::element_type float_precision;
 
 	bool quiet;
 

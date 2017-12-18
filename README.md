@@ -10,11 +10,7 @@
 |:-----:|:-----:|:-----:|:-----:|
 | [![Coverity](https://scan.coverity.com/projects/11296/badge.svg)](https://scan.coverity.com/projects/stephensolis-modmap-generator-cpp) | [![Codacy](https://api.codacy.com/project/badge/Grade/7d0d5cf06d1a4b279b2d4a2e47e51e65)](https://www.codacy.com/app/stephensolis/modmap-generator-cpp) | [![Coveralls](https://coveralls.io/repos/github/stephensolis/modmap-generator-cpp/badge.svg?branch=master)](https://coveralls.io/github/stephensolis/modmap-generator-cpp?branch=master) | [![Codecov](https://codecov.io/gh/stephensolis/modmap-generator-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/stephensolis/modmap-generator-cpp) |
 
-This is a fast C++ implementation of some functionality for generating Molecular Distance Maps, as seen in the following papers:
-
-- [Mapping the Space of Genomic Signatures](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0119815)
-- [An investigation into inter- and intragenomic variations of graphic genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0655-4)
-- [Additive methods for genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1157-8)
+This is a fast C++ implementation of some backend generation functionality for Molecular Distance Maps. Unless you are writing your own pipeline, you likely want to use this program via [stephensolis/modmap-toolkit](https://github.com/stephensolis/modmap-toolkit). Alternately, you can use the older ([and slower](#benchmarks)) Mathematica implementation: [stephensolis/modmap-generator-mma](https://github.com/stephensolis/modmap-generator-mma).
 
 It supports the following representations of DNA sequences:
 
@@ -31,7 +27,11 @@ and the following distances:
 - [SSIM](https://ece.uwaterloo.ca/~z70wang/research/ssim/)
 - [Approximate Information Distance](http://arxiv.org/abs/cs/0111054)
 
-In order to produce graphical Molecular Distance Maps from the output of this program, you can use [stephensolis/modmap-toolkit](https://github.com/stephensolis/modmap-toolkit) (recommended) or [stephensolis/modmap-generator-mma](https://github.com/stephensolis/modmap-generator-mma) (older).
+You may wish to see the following papers for further reference:
+
+- [Mapping the Space of Genomic Signatures](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0119815)
+- [An investigation into inter- and intragenomic variations of graphic genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0655-4)
+- [Additive methods for genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1157-8)
 
 ## Getting Started
 
@@ -42,7 +42,13 @@ For best performance, make sure you download the version corresponding to the la
 Try putting some FASTA files in a directory `fasta`, creating a directory `output`, then running:
 
 	mmg-cli repr cgr-k=9 --in fasta --out output
-	mmg-cli dist manhattan --in output/xxxxx --out output
+	mmg-cli dist manhattan --in output/cgr-k=9.mm-repr --out output
+
+## Working with output files
+
+The format of output files [is documented here](https://github.com/stephensolis/modmap-generator-cpp/blob/master/docs/output-files.md). `repr` mode will generate files with the extension `.mm-repr` and `dist` mode will generate files with the extension `.mm-dist`.
+
+Libraries to read and write these formats, for C++, Python, MATLAB, and Mathematica, can be found in the `mmg-formats` folder.
 
 ## Usage
 
@@ -122,18 +128,20 @@ Try putting some FASTA files in a directory `fasta`, creating a directory `outpu
 
 ## Directory Structure
 
+- `benchmarks`: Used to generate the benchmark results below
+- `external`: External libraries and code
+- `docs`: Documentation
 - `libmmg`: A reusable header-only library for working with the representations and distances of this project
 	- `distances`: Distance computation for dense vectors/matrices
 	- `distances-sparse`: Distance computation for sparse vectors/matrices
 	- `io`: Reading and writing FASTA sequences and binary-encoded representations
 	- `representations`: Generating representations (FCGR, Descriptors, ...)
 	- `utils`: Other useful tools (parallel execution, timing, etc.)
+- `mmg-formats`: Libraries to read and write the `.mm-repr` and `.mm-dist` file formats
 - `src`: The program
 	- `common`: Code independent of user interface
 	- `mmg-cli`: The command-line interface
 - `tests`: The test suite
-- `benchmarks`: Used to generate the benchmark results below
-- `external`: External libraries and code
 
 ## Benchmarks
 

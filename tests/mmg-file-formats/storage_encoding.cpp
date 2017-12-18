@@ -4,9 +4,9 @@
 #include <cstdint>
 #include <limits>
 
-#include <libmmg/io/storage_encoding.hpp>
+#include <mmg-formats/cpp/common/storage_encoding.hpp>
 
-#include "test_helpers.hpp"
+#include "../test_helpers.hpp"
 
 using namespace std;
 using namespace mmg;
@@ -33,7 +33,7 @@ using namespace mmg;
 		}                                                                \
 	}
 
-SCENARIO("libmmg storage encoding", "[libmmg][io][storage_encoding]") {
+SCENARIO("mmg-formats storage encoding", "[mmg-formats][common][storage_encoding]") {
 	TEST_STORAGE_ENCODING(uint8_t, 10);
 	TEST_STORAGE_ENCODING(uint16_t, 10);
 	TEST_STORAGE_ENCODING(uint32_t, 10);

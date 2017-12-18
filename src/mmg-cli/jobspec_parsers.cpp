@@ -23,7 +23,6 @@
 
 #include "../common/defaults.hpp"
 #include "../common/options_structs.hpp"
-#include "../common/output_headers.hpp"
 
 #include "console_marks.hpp"
 #include "exceptions.hpp"

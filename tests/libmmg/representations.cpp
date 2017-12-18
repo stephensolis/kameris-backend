@@ -4,10 +4,10 @@
 #include <stdexcept>
 #include <string>
 
-#include <libmmg/io/adapters.hpp>
 #include <libmmg/representations.hpp>
+#include <libmmg/utils/matrix_vector_adapters.hpp>
 
-#include "test_helpers.hpp"
+#include "../test_helpers.hpp"
 
 using namespace std;
 using namespace mmg;

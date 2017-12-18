@@ -5,8 +5,8 @@
 #include <string>
 #include <utility>
 
-#include <libmmg/io/binary.hpp>
-#include <libmmg/io/storage_encoding.hpp>
+#include <mmg-formats/cpp/common/raw_binary_io.hpp>
+#include <mmg-formats/cpp/common/storage_encoding.hpp>
 
 #include "checkpointer.hpp"
 

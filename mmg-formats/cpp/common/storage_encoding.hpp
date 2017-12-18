@@ -1,5 +1,5 @@
-#ifndef _LIBMMG_STORAGE_ENCODING_
-#define _LIBMMG_STORAGE_ENCODING_
+#ifndef _MMG_FORMATS_COMMON_STORAGE_ENCODING_
+#define _MMG_FORMATS_COMMON_STORAGE_ENCODING_
 
 #include <cstddef>
 #include <cstdint>

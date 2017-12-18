@@ -1,5 +1,5 @@
-#ifndef _LIBMMG_IO_BINARY_COLLECTIONS_
-#define _LIBMMG_IO_BINARY_COLLECTIONS_
+#ifndef _MMG_FORMATS_COMMON_BINARY_COLLECTION_IO_
+#define _MMG_FORMATS_COMMON_BINARY_COLLECTION_IO_
 
 #include <cstddef>
 #include <cstdint>
@@ -8,7 +8,7 @@
 #include <ostream>
 #include <vector>
 
-#include "binary.hpp"
+#include "raw_binary_io.hpp"
 #include "storage_encoding.hpp"
 
 namespace mmg {

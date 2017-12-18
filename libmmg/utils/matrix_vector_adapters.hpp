@@ -1,5 +1,5 @@
-#ifndef _LIBMMG_IO_ADAPTERS_
-#define _LIBMMG_IO_ADAPTERS_
+#ifndef _LIBMMG_UTILS_MATRIX_VECTOR_ADAPTERS_
+#define _LIBMMG_UTILS_MATRIX_VECTOR_ADAPTERS_
 
 #include <cstddef>
 #include <cstdlib>

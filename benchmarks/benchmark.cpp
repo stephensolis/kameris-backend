@@ -7,7 +7,6 @@
 #include <vector>
 
 #include <libmmg/distances.hpp>
-#include <libmmg/io.hpp>
 #include <libmmg/representations.hpp>
 #include <libmmg/utils.hpp>
 

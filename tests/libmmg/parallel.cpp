@@ -4,7 +4,7 @@
 
 #include <libmmg/utils/parallel.hpp>
 
-#include "test_helpers.hpp"
+#include "../test_helpers.hpp"
 
 using namespace std;
 using namespace mmg;
