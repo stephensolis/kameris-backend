@@ -17,13 +17,13 @@ namespace mmg {
 		uint8_t /*(bool)*/ is_sparse;
 		element_type key_type;
 		element_type value_type;
-		uint32_t count;
+		uint64_t count;
 		uint64_t rows, cols;
 	};
 
 	struct dist_header {
 		element_type value_type;
-		uint32_t size;
+		uint64_t size;
 	};
 }
 
