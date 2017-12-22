@@ -66,15 +66,15 @@ namespace mmg {
 
 		size_t horiz_data_size = img1.rows() * (img1.cols() - 10);
 		std::unique_ptr<Ret[]> horiz_data(new Ret[5 * horiz_data_size]);
-		MatrixAdapter<Ret> img1_horiz = make_matrix_adapter(horiz_data.get(), img1.rows(), img1.cols() - 10);
+		MatrixAdapter<Ret> img1_horiz = make_matrix_adapter(&horiz_data[0], img1.rows(), img1.cols() - 10);
 		MatrixAdapter<Ret> img2_horiz =
-			make_matrix_adapter(horiz_data.get() + horiz_data_size, img1.rows(), img1.cols() - 10);
+			make_matrix_adapter(&horiz_data[horiz_data_size], img1.rows(), img1.cols() - 10);
 		MatrixAdapter<Ret> img11_horiz =
-			make_matrix_adapter(horiz_data.get() + (2 * horiz_data_size), img1.rows(), img1.cols() - 10);
+			make_matrix_adapter(&horiz_data[2 * horiz_data_size], img1.rows(), img1.cols() - 10);
 		MatrixAdapter<Ret> img22_horiz =
-			make_matrix_adapter(horiz_data.get() + (3 * horiz_data_size), img1.rows(), img1.cols() - 10);
+			make_matrix_adapter(&horiz_data[3 * horiz_data_size], img1.rows(), img1.cols() - 10);
 		MatrixAdapter<Ret> img12_horiz =
-			make_matrix_adapter(horiz_data.get() + (4 * horiz_data_size), img1.rows(), img1.cols() - 10);
+			make_matrix_adapter(&horiz_data[4 * horiz_data_size], img1.rows(), img1.cols() - 10);
 
 		for (size_t i = 0; i < img1.rows(); ++i) {
 			for (size_t j = 0; j < size_t(img1.cols() - 10); ++j) {

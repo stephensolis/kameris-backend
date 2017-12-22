@@ -9,14 +9,15 @@
 
 class ProgressBar {
  private:
-	const std::string msg;
-	uint64_t curr_count, max_count;
-	std::chrono::steady_clock::time_point start_time, last_update;
+	const std::string _message;
+	uint64_t _curr_count = 0;
+	const uint64_t _max_count;
+	const std::chrono::steady_clock::time_point _start_time = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point _last_update;
 
  public:
 	explicit ProgressBar(uint64_t max_count, std::string message = "")
-			: msg(std::move(message)), curr_count(0), max_count(max_count),
-			  start_time(std::chrono::steady_clock::now()) {}
+			: _message(std::move(message)), _max_count(max_count) {}
 	~ProgressBar();
 
 	void increment(uint64_t incr = 1);

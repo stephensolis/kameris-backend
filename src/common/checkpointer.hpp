@@ -16,10 +16,11 @@ class Checkpointer {
 			return stage_num == 0;
 		}
 	};
+	static constexpr size_t state_size = sizeof state().stage_num + sizeof state().stage_pos;
 
  private:
-	std::fstream file;
-	std::chrono::steady_clock::time_point last_write;
+	std::fstream _file;
+	std::chrono::steady_clock::time_point _last_write;
 
 	static constexpr unsigned update_rate = 2000;
 	void rewind();

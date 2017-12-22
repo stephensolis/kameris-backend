@@ -10,7 +10,7 @@
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
 
-#include <mmg-formats/cpp/headers.hpp>
+#include <mmg-formats/cpp/element_type.hpp>
 
 struct run_options {
 	std::string in1_path;

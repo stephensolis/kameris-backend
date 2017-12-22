@@ -1,4 +1,3 @@
-#include <cassert>
 #include <cstdint>
 #include <fstream>
 #include <functional>
@@ -21,14 +20,12 @@ using namespace std;
 
 class repr_executor : public executor {
  protected:
-	const run_options options;
-	const vector<repr_options> jobs;
-	const Checkpointer::state start_state;
+	const run_options _options;
+	const vector<repr_options> _jobs;
+	const Checkpointer::state _start_state;
 
-	repr_executor(run_options in_options, vector<repr_options> in_jobs, Checkpointer::state in_start_state = {})
-			: options(std::move(in_options)), jobs(std::move(in_jobs)), start_state(in_start_state) {
-		assert(!jobs.empty());
-	}
+	repr_executor(run_options options, vector<repr_options> jobs, Checkpointer::state start_state = {})
+			: _options(std::move(options)), _jobs(std::move(jobs)), _start_state(start_state) {}
 };
 
 class cgrlike_repr_executor : public repr_executor {
@@ -62,14 +59,12 @@ class descr_repr_executor : public repr_executor {
 
 class dist_executor : public executor {
  protected:
-	const run_options options;
-	const vector<dist_options> jobs;
-	const Checkpointer::state start_state;
+	const run_options _options;
+	const vector<dist_options> _jobs;
+	const Checkpointer::state _start_state;
 
-	dist_executor(run_options in_options, vector<dist_options> in_jobs, Checkpointer::state in_start_state = {})
-			: options(std::move(in_options)), jobs(std::move(in_jobs)), start_state(in_start_state) {
-		assert(!jobs.empty());
-	}
+	dist_executor(run_options options, vector<dist_options> jobs, Checkpointer::state start_state = {})
+			: _options(std::move(options)), _jobs(std::move(jobs)), _start_state(start_state) {}
 };
 
 class general_dist_executor : public dist_executor {
@@ -111,6 +106,10 @@ class usm_dist_executor : public dist_executor {
 unique_ptr<executor> make_executor(const run_args &args, const Checkpointer::state &start_state = {}) {
 	if (args.mode == run_mode::repr) {
 		const auto &jobs = get<vector<repr_options>>(args.jobs);
+		if (jobs.empty()) {
+			throw std::invalid_argument("The list of jobs cannot be empty");
+		}
+
 		if (jobs.front().type() == typeid(descr_options)) {
 			return make_unique<descr_repr_executor>(args.options, jobs, start_state);
 		} else {
@@ -118,6 +117,10 @@ unique_ptr<executor> make_executor(const run_args &args, const Checkpointer::sta
 		}
 	} else if (args.mode == run_mode::dist) {
 		const auto &jobs = get<vector<dist_options>>(args.jobs);
+		if (jobs.empty()) {
+			throw std::invalid_argument("The list of jobs cannot be empty");
+		}
+
 		if (jobs.front().type() == typeid(usm_options)) {
 			return make_unique<usm_dist_executor>(args.options, jobs, start_state);
 		} else {

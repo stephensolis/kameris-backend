@@ -6,7 +6,7 @@
 
 #include <boost/program_options.hpp>
 
-#include <mmg-formats/cpp/headers.hpp>
+#include <mmg-formats/cpp/element_type.hpp>
 #include "../common/defaults.hpp"
 #include "../common/filesystem_checks.hpp"
 #include "../common/run_args.hpp"

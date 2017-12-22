@@ -16,44 +16,28 @@ namespace mmg {
 		template <typename Func>
 		using func_result = typename std::result_of<Func(unsigned)>::type;
 
-		std::vector<std::thread> workers;
+		std::vector<std::thread> _workers;
 
-		std::vector<std::function<void(unsigned)>> tasks;
-		std::atomic<size_t> curr_task = {0};
-		bool started = false;
+		std::vector<std::function<void(unsigned)>> _tasks;
+		std::atomic<size_t> _curr_task = {0};
+		bool _started = false;
 
 	 public:
 		ParallelExecutor() = default;
 
-		ParallelExecutor(const ParallelExecutor &other) {
-			if (started) {
-				throw std::logic_error("Copying is not possible once execution has started");
-			}
-
-			tasks = other.tasks;
-		}
-
-		ParallelExecutor &operator=(const ParallelExecutor &other) {
-			if (started) {
-				throw std::logic_error("Copying is not possible once execution has started");
-			}
-
-			tasks = other.tasks;
-			return *this;
-		}
-
-		//it's not really possible to write noexcept moves for this class
+		ParallelExecutor(const ParallelExecutor &other) = delete;
+		ParallelExecutor &operator=(const ParallelExecutor &other) = delete;
 		ParallelExecutor(ParallelExecutor &&other) = delete;
 		ParallelExecutor &operator=(ParallelExecutor &&other) = delete;
 
 		template <typename Func>
 		auto enqueue(Func func) -> std::future<func_result<Func>> {
-			if (started) {
+			if (_started) {
 				throw std::logic_error("Adding more tasks is not possible once execution has started");
 			}
 
 			auto task = std::make_shared<std::packaged_task<func_result<Func>(unsigned)>>(func);
-			tasks.emplace_back([task](unsigned thread_id) {
+			_tasks.emplace_back([task](unsigned thread_id) {
 				(*task)(thread_id); //
 			});
 
@@ -65,28 +49,28 @@ namespace mmg {
 				throw std::invalid_argument("At least one thread must be started");
 			}
 
-			if (started) {
+			if (_started) {
 				throw std::logic_error("Execution can only be started once");
 			}
-			started = true;
+			_started = true;
 
 			for (unsigned thread_id = 0; thread_id < threads; ++thread_id) {
-				workers.emplace_back([thread_id, this]() {
+				_workers.emplace_back([thread_id, this]() {
 					while (true) {
-						size_t curr_task = this->curr_task.fetch_add(1, std::memory_order_relaxed);
+						size_t fetched_task = _curr_task.fetch_add(1, std::memory_order_relaxed);
 
-						if (curr_task >= this->tasks.size()) {
+						if (fetched_task >= _tasks.size()) {
 							return;
 						}
 
-						this->tasks[curr_task](thread_id);
+						_tasks[fetched_task](thread_id);
 					}
 				});
 			}
 		}
 
 		~ParallelExecutor() {
-			for (std::thread &worker : workers) {
+			for (std::thread &worker : _workers) {
 				worker.join();
 			}
 		}

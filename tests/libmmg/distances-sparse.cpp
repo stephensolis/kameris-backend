@@ -18,18 +18,16 @@ const map<uint64_t, double> vect2_map = {
 	{0, 2.791099277582326}, {1, 1.658589795039715}, {2, 9.050008948479139}, {3, 3.5626466924860285}, {8, 1}};
 const map<uint64_t, double> vect3_map = {
 	{0, 2.791099277582326}, {1, 1.658589795039715}, {2, 9.050008948479139}, {3, 3.5626466924860285}, {5, 1}};
-const auto vect1_sparse = make_sparse_vector_adapter(const_cast<map<uint64_t, double> &>(vect1_map), 10); // NOLINT
-const auto vect2_sparse = make_sparse_vector_adapter(const_cast<map<uint64_t, double> &>(vect2_map), 10); // NOLINT
-const auto vect3_sparse = make_sparse_vector_adapter(const_cast<map<uint64_t, double> &>(vect3_map), 10); // NOLINT
+const auto vect1_sparse = make_sparse_vector_adapter(vect1_map, 10);
+const auto vect2_sparse = make_sparse_vector_adapter(vect2_map, 10);
+const auto vect3_sparse = make_sparse_vector_adapter(vect3_map, 10);
 
 map<uint64_t, double> vect1_map_copy = vect1_map;
 auto vect1_sparse_copy = make_sparse_vector_adapter(vect1_map_copy, 10);
 
 const map<uint64_t, double> zero_vect_map;
-const auto zero_vect_sparse =
-	make_sparse_vector_adapter(const_cast<map<uint64_t, double> &>(zero_vect_map), 4); // NOLINT
-const auto empty_vect_sparse =
-	make_sparse_vector_adapter(const_cast<map<uint64_t, double> &>(zero_vect_map), 0); // NOLINT
+const auto zero_vect_sparse = make_sparse_vector_adapter(zero_vect_map, 4);
+const auto empty_vect_sparse = make_sparse_vector_adapter(zero_vect_map, 0);
 
 #define RANDOM_VECTOR_DISTANCE_TESTS(vect1, vect2)                                                                     \
 	TEST_CLOSE_TO_DOUBLE(Euclidean distance, sparse_euclidean(vect1, vect2), 4.941884811806992);                       \

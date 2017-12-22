@@ -14,24 +14,24 @@ const unsigned bar_width = 35;
 const unsigned update_rate = 1000;
 
 void ProgressBar::increment(uint64_t incr) {
-	curr_count += incr;
+	_curr_count += incr;
 
 	steady_clock::time_point now = steady_clock::now();
-	if (now - last_update < milliseconds(update_rate)) {
+	if (now - _last_update < milliseconds(update_rate)) {
 		return;
 	}
 
-	last_update = now;
-	steady_clock::duration elapsed = now - start_time;
-	auto eta = elapsed * (double(max_count - curr_count) / curr_count);
+	_last_update = now;
+	steady_clock::duration elapsed = now - _start_time;
+	auto eta = elapsed * (double(_max_count - _curr_count) / _curr_count);
 
-	auto bar_unfilled_chars = unsigned(bar_width * (double(max_count - curr_count) / max_count));
+	auto bar_unfilled_chars = unsigned(bar_width * (double(_max_count - _curr_count) / _max_count));
 	unsigned bar_filled_chars = max(int(bar_width - bar_unfilled_chars) - 1, 0);
 
-	cout << "\r" << msg //beginning message
-		 << 100 * curr_count / max_count << "%" //percentage
+	cout << "\r" << _message //beginning message
+		 << 100 * _curr_count / _max_count << "%" //percentage
 		 << " [" << string(bar_filled_chars, '=') << ">" << string(bar_unfilled_chars, ' ') << "] " //progress bar
-		 << curr_count << "/" << max_count //progress
+		 << _curr_count << "/" << _max_count //progress
 		 << " ETA:";
 
 	if (eta >= days(1)) {

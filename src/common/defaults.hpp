@@ -5,7 +5,7 @@
 #include <thread>
 #include <utility>
 
-#include <mmg-formats/cpp/headers.hpp>
+#include <mmg-formats/cpp/element_type.hpp>
 #include "options_structs.hpp"
 
 namespace defaults {

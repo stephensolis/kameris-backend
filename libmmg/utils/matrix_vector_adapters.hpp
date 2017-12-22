@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <map>
+#include <utility>
 
 namespace mmg {
 	template <typename T>
@@ -12,11 +13,46 @@ namespace mmg {
 		using value_type = T;
 
 	 private:
-		T *const _data;
-		const size_t _rows, _cols;
+		T *_data;
+		size_t _rows = 0, _cols = 0;
+		bool _own_data = false;
 
 	 public:
-		MatrixAdapter(T *data, size_t rows, size_t cols) : _data(data), _rows(rows), _cols(cols) {}
+		MatrixAdapter() = default;
+		MatrixAdapter(T *data, size_t rows, size_t cols, bool own_data = false)
+				: _data(data), _rows(rows), _cols(cols), _own_data(own_data) {}
+		~MatrixAdapter() {
+			if (_own_data) {
+				delete[] _data;
+			}
+		}
+
+		MatrixAdapter(const MatrixAdapter &other) : _data(other._data), _rows(other._rows), _cols(other._cols) {
+			if (other._own_data) {
+				throw std::logic_error("Copying is not allowed if the adapter owns the data");
+			}
+		}
+		friend void swap(MatrixAdapter &first, MatrixAdapter &second) noexcept {
+			using std::swap;
+
+			swap(first._data, second._data);
+			swap(first._rows, second._rows);
+			swap(first._cols, second._cols);
+			swap(first._own_data, second._own_data);
+		}
+		MatrixAdapter &operator=(const MatrixAdapter &other) {
+			MatrixAdapter temp(other);
+			swap(*this, temp);
+			return *this;
+		}
+		MatrixAdapter(MatrixAdapter &&other) noexcept
+				: _data(other._data), _rows(other._rows), _cols(other._cols), _own_data(other._own_data) {
+			other._own_data = false; //to prevent the destructor call
+		}
+		MatrixAdapter &operator=(MatrixAdapter &&other) noexcept {
+			swap(*this, other);
+			return *this;
+		}
 
 		const T &operator()(size_t i, size_t j) const {
 			return _data[(i * _cols) + j];
@@ -44,11 +80,44 @@ namespace mmg {
 		using value_type = T;
 
 	 private:
-		T *const _data;
-		const size_t _size;
+		T *_data;
+		size_t _size = 0;
+		bool _own_data = false;
 
 	 public:
-		VectorAdapter(T *data, size_t size) : _data(data), _size(size) {}
+		VectorAdapter() = default;
+		VectorAdapter(T *data, size_t size, bool own_data = false) : _data(data), _size(size), _own_data(own_data) {}
+		~VectorAdapter() {
+			if (_own_data) {
+				delete[] _data;
+			}
+		}
+
+		VectorAdapter(const VectorAdapter &other) : _data(other._data), _size(other._size) {
+			if (other._own_data) {
+				throw std::logic_error("Copying is not allowed if the adapter owns the data");
+			}
+		}
+		friend void swap(VectorAdapter &first, VectorAdapter &second) noexcept {
+			using std::swap;
+
+			swap(first._data, second._data);
+			swap(first._size, second._size);
+			swap(first._own_data, second._own_data);
+		}
+		VectorAdapter &operator=(VectorAdapter other) {
+			VectorAdapter temp(other);
+			swap(*this, temp);
+			return *this;
+		}
+		VectorAdapter(VectorAdapter &&other) noexcept
+				: _data(other._data), _size(other._size), _own_data(other._own_data) {
+			other._own_data = false; //to prevent the destructor call
+		}
+		VectorAdapter &operator=(VectorAdapter &&other) noexcept {
+			swap(*this, other);
+			return *this;
+		}
 
 		const T &operator[](size_t i) const {
 			return _data[i];
@@ -71,16 +140,15 @@ namespace mmg {
 		typename... MapArgs>
 	class SparseVectorAdapter {
 	 public:
-		using key_type = typename Map<Key, T, MapArgs...>::key_type;
-		using mapped_type = typename Map<Key, T, MapArgs...>::mapped_type;
-		using value_type = typename Map<Key, T, MapArgs...>::value_type;
+		using key_type = Key;
+		using value_type = T;
 
 	 private:
-		Map<Key, T, MapArgs...> &_data;
+		Map<Key, T, MapArgs...> _data;
 		const size_t _length;
 
 	 public:
-		SparseVectorAdapter(Map<Key, T, MapArgs...> &data, size_t length) : _data(data), _length(length) {}
+		SparseVectorAdapter(Map<Key, T, MapArgs...> &&data, size_t length) : _data(data), _length(length) {}
 
 		typename Map<Key, T, MapArgs...>::const_iterator begin() const {
 			return _data.cbegin();
@@ -114,14 +182,49 @@ namespace mmg {
 		using value_type = T;
 
 	 private:
-		T *const _data;
-		const size_t _size;
+		T *_data;
+		size_t _size = 0;
+		bool _own_data = false;
 
 		//this is because we return always return /references/ to values, even those on the main diagonal
 		mutable T default_value = T();
 
 	 public:
-		SymmetricDistanceMatrixAdapter(T *data, size_t size) : _data(data), _size(size) {}
+		SymmetricDistanceMatrixAdapter() = default;
+		SymmetricDistanceMatrixAdapter(T *data, size_t size, bool own_data = false)
+				: _data(data), _size(size), _own_data(own_data) {}
+		~SymmetricDistanceMatrixAdapter() {
+			if (_own_data) {
+				delete[] _data;
+			}
+		}
+
+		SymmetricDistanceMatrixAdapter(const SymmetricDistanceMatrixAdapter &other)
+				: _data(other._data), _size(other._size) {
+			if (other._own_data) {
+				throw std::logic_error("Copying is not allowed if the adapter owns the data");
+			}
+		}
+		friend void swap(SymmetricDistanceMatrixAdapter &first, SymmetricDistanceMatrixAdapter &second) noexcept {
+			using std::swap;
+
+			swap(first._data, second._data);
+			swap(first._size, second._size);
+			swap(first._own_data, second._own_data);
+		}
+		SymmetricDistanceMatrixAdapter &operator=(const SymmetricDistanceMatrixAdapter &other) {
+			SymmetricDistanceMatrixAdapter temp(other);
+			swap(*this, temp);
+			return *this;
+		}
+		SymmetricDistanceMatrixAdapter(SymmetricDistanceMatrixAdapter &&other) noexcept
+				: _data(other._data), _size(other._size), _own_data(other._own_data) {
+			other._own_data = false; //to prevent the destructor call
+		}
+		SymmetricDistanceMatrixAdapter &operator=(SymmetricDistanceMatrixAdapter &&other) noexcept {
+			swap(*this, other);
+			return *this;
+		}
 
 		const T &operator()(size_t i, size_t j) const {
 			if (i < j) {
@@ -151,25 +254,26 @@ namespace mmg {
 	};
 
 	template <typename T>
-	inline MatrixAdapter<T> make_matrix_adapter(T *data, size_t rows, size_t cols) {
-		return MatrixAdapter<T>(data, rows, cols);
+	inline MatrixAdapter<T> make_matrix_adapter(T *data, size_t rows, size_t cols, bool own_data = false) {
+		return MatrixAdapter<T>(data, rows, cols, own_data);
 	}
 
 	template <typename T>
-	inline VectorAdapter<T> make_vector_adapter(T *data, size_t size) {
-		return VectorAdapter<T>(data, size);
+	inline VectorAdapter<T> make_vector_adapter(T *data, size_t size, bool own_data = false) {
+		return VectorAdapter<T>(data, size, own_data);
 	}
 
 	template <typename Key, typename T, template <typename, typename, typename...> class Map = std::map,
 		typename... MapArgs>
-	inline SparseVectorAdapter<Key, T, Map, MapArgs...> make_sparse_vector_adapter(Map<Key, T, MapArgs...> &data,
+	inline SparseVectorAdapter<Key, T, Map, MapArgs...> make_sparse_vector_adapter(Map<Key, T, MapArgs...> data,
 		/**/ size_t length) {
-		return SparseVectorAdapter<Key, T, Map, MapArgs...>(data, length);
+		return SparseVectorAdapter<Key, T, Map, MapArgs...>(std::move(data), length);
 	}
 
 	template <typename T>
-	inline SymmetricDistanceMatrixAdapter<T> make_symmetric_distance_adapter(T *data, size_t size) {
-		return SymmetricDistanceMatrixAdapter<T>(data, size);
+	inline SymmetricDistanceMatrixAdapter<T> make_symmetric_distance_adapter(T *data, size_t size,
+		/**/ bool own_data = false) {
+		return SymmetricDistanceMatrixAdapter<T>(data, size, own_data);
 	}
 }
 
