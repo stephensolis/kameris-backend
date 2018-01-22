@@ -8,6 +8,7 @@ env:
     - CXX='clang++-3.9' EXTRA_PACKAGES='clang-3.9 g++'
     - CXX='clang++-4.0' EXTRA_PACKAGES='clang-4.0 g++'
     - CXX='clang++-5.0' EXTRA_PACKAGES='clang-5.0 g++'
+    - CXX='clang++-6.0' EXTRA_PACKAGES='clang-6.0 g++'
 
 build:
   pre_ci_boot:

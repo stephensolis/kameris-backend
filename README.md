@@ -2,7 +2,7 @@
 
 ### Build Status
 
-| Travis <br> (Ubuntu zesty, macOS) | AppVeyor <br> (Windows) | Shippable <br> (Debian sid) | Wercker <br> (Alpine Linux, Arch, Fedora) |
+| Travis <br> (Ubuntu artful, macOS) | AppVeyor <br> (Windows) | Shippable <br> (Debian sid) | Wercker <br> (Alpine Linux, Arch, Fedora) |
 |:-----:|:-----:|:-----:|:-----:|
 | [![Travis](https://travis-ci.org/stephensolis/modmap-generator-cpp.svg?branch=master)](https://travis-ci.org/stephensolis/modmap-generator-cpp) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/2t4ydkdixbc00ybv?svg=true)](https://ci.appveyor.com/project/stephensolis/modmap-generator-cpp) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/bc733073537cd665d597942188c5a4ff/s/master)](https://app.wercker.com/project/byKey/bc733073537cd665d597942188c5a4ff) |
 
@@ -46,7 +46,7 @@ Try putting some FASTA files in a directory `fasta`, creating a directory `outpu
 
 ## Working with output files
 
-The format of output files [is documented here](https://github.com/stephensolis/modmap-generator-cpp/blob/master/docs/output-files.md). `repr` mode will generate files with the extension `.mm-repr` and `dist` mode will generate files with the extension `.mm-dist`.
+The format of output files [is documented here](https://github.com/stephensolis/modmap-generator-formats). `repr` mode will generate files with the extension `.mm-repr` and `dist` mode will generate files with the extension `.mm-dist`.
 
 Libraries to read and write these formats, for C++, Python, MATLAB, and Mathematica, can be found in the `mmg-formats` folder.
 

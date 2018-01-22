@@ -5,7 +5,10 @@ build-alpine-gcc:
   steps:
     - script:
         name: package install
-        code: apk --no-cache add g++ cmake make boost-dev boost-filesystem boost-program_options
+        code: apk --no-cache add g++ cmake make boost-dev boost-filesystem boost-program_options git
+    - script:
+        name: submodule fetch
+        code: git submodule update --init --recursive
     - script:
         name: cmake
         code: mkdir build && cd build && cmake ..
@@ -20,7 +23,10 @@ build-alpine-clang:
   steps:
     - script:
         name: package install
-        code: apk --no-cache add g++ clang cmake make boost-dev boost-filesystem boost-program_options
+        code: apk --no-cache add g++ clang cmake make boost-dev boost-filesystem boost-program_options git
+    - script:
+        name: submodule fetch
+        code: git submodule update --init --recursive
     - script:
         name: cmake
         code: mkdir build && cd build && cmake CXX='clang++' ..
@@ -33,7 +39,10 @@ build-arch-gcc:
   steps:
     - script:
         name: package install
-        code: pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -S gcc cmake make boost && pacman --noconfirm -Su || true
+        code: pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -S gcc cmake make boost git && pacman --noconfirm -Su || true
+    - script:
+        name: submodule fetch
+        code: git submodule update --init --recursive
     - script:
         name: cmake
         code: mkdir build && cd build && cmake ..
@@ -46,7 +55,10 @@ build-arch-clang:
   steps:
     - script:
         name: package install
-        code: pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -S clang cmake make boost && pacman --noconfirm -Su || true
+        code: pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -S clang cmake make boost git && pacman --noconfirm -Su || true
+    - script:
+        name: submodule fetch
+        code: git submodule update --init --recursive
     - script:
         name: cmake
         code: mkdir build && cd build && CXX='clang++' cmake ..
@@ -59,7 +71,10 @@ build-fedora-gcc:
   steps:
     - script:
         name: package install
-        code: for i in {1..5}; do dnf -y install gcc-c++ cmake make boost-devel boost-static boost-filesystem boost-program-options && break || sleep 5; done
+        code: for i in {1..5}; do dnf -y install gcc-c++ cmake make boost-devel boost-static boost-filesystem boost-program-options git && break || sleep 5; done
+    - script:
+        name: submodule fetch
+        code: git submodule update --init --recursive
     - script:
         name: cmake
         code: mkdir build && cd build && cmake ..
@@ -72,7 +87,10 @@ build-fedora-clang:
   steps:
     - script:
         name: package install
-        code: for i in {1..5}; do dnf -y install clang cmake make boost-devel boost-static boost-filesystem boost-program-options && break || sleep 5; done
+        code: for i in {1..5}; do dnf -y install clang cmake make boost-devel boost-static boost-filesystem boost-program-options git && break || sleep 5; done
+    - script:
+        name: submodule fetch
+        code: git submodule update --init --recursive
     - script:
         name: cmake
         code: mkdir build && cd build && CXX='clang++' cmake ..

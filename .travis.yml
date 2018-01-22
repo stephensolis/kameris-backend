@@ -13,88 +13,75 @@ matrix:
       sudo: required
       env: JOB='compile'
       before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y g++-5 libboost-dev libboost-filesystem-dev libboost-program-options-dev
-        - export CXX="g++-5"
-    - os: linux
-      dist: trusty
-      sudo: required
-      env: JOB='compile'
-      before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
         - sudo apt-get update
-        - sudo apt-get install -y g++-6 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - sudo apt-get install -y gcc g++-6 libboost-dev libboost-filesystem-dev libboost-program-options-dev
         - export CXX="g++-6"
-    #- os: linux
-    #  dist: trusty
-    #  sudo: required
-    #  env: JOB='compile'
-    #  before_install:
-    #    - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
-    #    - sudo apt-get update
-    #    - sudo apt-get install -y g++-7 libboost-dev libboost-filesystem-dev libboost-program-options-dev
-    #    - export CXX="g++-7"
     - os: linux
       dist: trusty
       sudo: required
       env: JOB='compile'
       before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y clang-3.8 libboost-dev libboost-filesystem-dev libboost-program-options-dev
-        - export CXX="clang++-3.8"
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y gcc g++-7 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="g++-7"
     - os: linux
       dist: trusty
       sudo: required
       env: JOB='compile'
       before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y clang-3.9 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y gcc clang-3.9 libboost-dev libboost-filesystem-dev libboost-program-options-dev
         - export CXX="clang++-3.9"
     - os: linux
       dist: trusty
       sudo: required
       env: JOB='compile'
       before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y clang-4.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y gcc clang-4.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
         - export CXX="clang++-4.0"
     - os: linux
       dist: trusty
       sudo: required
       env: JOB='compile'
       before_install:
-        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
-        - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty-4.0 main"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y clang-4.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
-        - export CXX="clang++-4.0"
-    - os: linux
-      dist: trusty
-      sudo: required
-      env: JOB='compile'
-      before_install:
-        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
-        - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty-5.0 main"
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
         - sudo apt-get update
-        - sudo apt-get install -y clang-5.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - sudo apt-get install -y gcc clang-5.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
         - export CXX="clang++-5.0"
-    #- os: linux
-    #  dist: trusty
-    #  sudo: required
-    #  env: JOB='compile'
-    #  before_install:
-    #    - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-    #    - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
-    #    - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty main"
-    #    - sudo apt-get update
-    #    - sudo apt-get install -y clang-6.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
-    #    - export CXX="clang++-6.0"
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: JOB='compile'
+      before_install:
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y dpkg
+        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo add-apt-repository -y "deb https://apt.llvm.org/artful/ llvm-toolchain-artful-6.0 main"
+        - sudo apt-get update
+        - sudo apt-get install -y gcc clang-6.0 libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++-6.0"
     - os: osx
       osx_image: xcode6.4
       env: JOB='compile'
@@ -128,15 +115,18 @@ matrix:
       sudo: required
       env: JOB='lint'
       before_install:
-        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
-        - sudo add-apt-repository -y "deb https://apt.llvm.org/zesty/ llvm-toolchain-zesty-5.0 main"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y libboost-dev libboost-filesystem-dev libboost-program-options-dev clang-5.0 clang-format-5.0 clang-tidy-5.0
+        - sudo apt-get install -y dpkg
+        - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo add-apt-repository -y "deb https://apt.llvm.org/artful/ llvm-toolchain-artful-6.0 main"
+        - sudo apt-get update
+        - sudo apt-get install -y libboost-dev libboost-filesystem-dev libboost-program-options-dev clang-6.0 clang-format-6.0 clang-tidy-6.0
         - mkdir -p ~/bin
-        - sudo ln -s /usr/bin/clang-format-5.0 ~/bin/clang-format
-        - sudo ln -s /usr/bin/clang-tidy-5.0 ~/bin/clang-tidy
-        - export CXX="clang++-5.0"
+        - sudo ln -s /usr/bin/clang-format-6.0 ~/bin/clang-format
+        - sudo ln -s /usr/bin/clang-tidy-6.0 ~/bin/clang-tidy
+        - export CXX="clang++-6.0"
     - os: osx
       env: JOB='lint'
       before_install:
@@ -151,24 +141,30 @@ matrix:
       sudo: required
       env: JOB='coverity'
       before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y g++-5 libboost-dev libboost-filesystem-dev libboost-program-options-dev
-        - export CXX="g++-5"
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y gcc g++ libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="g++"
         - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
         - export COVERITY_SCAN_PROJECT_NAME='stephensolis/modmap-generator-cpp'
         - export COVERITY_SCAN_NOTIFICATION_EMAIL='stephen@nowhere'
         - export COVERITY_SCAN_BRANCH_PATTERN='master'
-        - export COVERITY_SCAN_BUILD_COMMAND_PREPEND='cov-configure --comptype gcc --compiler g++-5 --template'
+        - export COVERITY_SCAN_BUILD_COMMAND_PREPEND='cov-configure --comptype gcc --compiler g++ --template'
         - export COVERITY_SCAN_BUILD_COMMAND='make'
     - os: linux
       dist: trusty
       sudo: required
       env: JOB='coverage'
       before_install:
-        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ zesty main universe"
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ xenial main universe"
         - sudo apt-get update
-        - sudo apt-get install -y g++ libboost-dev libboost-filesystem-dev libboost-program-options-dev lcov
+        - sudo apt-get install -y dpkg
+        - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
+        - sudo apt-get update
+        - sudo apt-get install -y gcc g++ libboost-dev libboost-filesystem-dev libboost-program-options-dev lcov
         - npm install -g coveralls codecov.io
 
 before_script:

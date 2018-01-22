@@ -88,6 +88,8 @@ init:
   - if "%ARCH%"=="amd64" ( appveyor SetVariable -Name BOOST_LIBDIR -Value lib64-msvc ) else ( appveyor SetVariable -Name BOOST_LIBDIR -Value lib32-msvc )
   - if "%VS_VER%"=="2017" ( appveyor SetVariable -Name BOOST_LIB_VERSION -Value 14.1 ) else ( appveyor SetVariable -Name BOOST_LIB_VERSION -Value 14.0 )
   - if "%VS_VER%"=="2017" ( appveyor SetVariable -Name BOOST_COMPILER_VERSION -Value vc141 ) else ( appveyor SetVariable -Name BOOST_COMPILER_VERSION -Value vc140 )
+install:
+  - git submodule update --init --recursive
 before_build:
   - if "%VS_VER%"=="2015" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%
   - if "%VS_VER%"=="2017" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsDevCmd.bat" -arch=%ARCH%
