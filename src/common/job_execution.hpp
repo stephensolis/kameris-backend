@@ -4,7 +4,8 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
-#include <vector>
+#include <string>
+#include <utility>
 #include <boost/variant.hpp>
 
 #include "options_structs.hpp"
@@ -19,10 +20,10 @@ struct confirm_action_info {
 struct run_start_info {
 	run_args args;
 
-	unsigned in1_size = 0;
-	unsigned in2_size = 0;
+	std::string in1_description;
+	std::string in2_description;
 
-	uint64_t est_memory = 0;
+	uint64_t est_memory_use = 0;
 };
 
 enum class stage_change_type { begin, end };
@@ -41,14 +42,16 @@ struct progress_info {
 	unsigned current_progress;
 };
 
-using on_confirm_action_t = std::function<bool(const confirm_action_info &)>;
+using on_confirm_action_t = std::function<void(const confirm_action_info &)>;
 using on_run_start_t = std::function<void(const run_start_info &)>;
 using on_stage_change_t = std::function<void(const stage_change_info &)>;
 using on_progress_t = std::function<void(const progress_info &)>;
 
 class executor {
  protected:
-	executor() = default;
+	const run_options _options;
+
+	explicit executor(run_options options) : _options(std::move(options)) {}
 
  public:
 	virtual ~executor() = default;

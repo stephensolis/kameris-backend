@@ -136,6 +136,8 @@ run_args parse_run_args(int argc, const char *const argv[]) {
 			result.options.int_precision = parse_int_precision(int_precision_str);
 			result.options.float_precision = parse_float_precision(run_mode::repr, float_precision_str);
 			result.options.quiet = quiet;
+			result.options.was_resumed = false;
+			result.options.resume_filename = defaults::resume_filename;
 			result.jobs = parse_repr_jobs(jobspec_str);
 		} else if (mode_str == "dist") {
 			check_option_present(args, "jobspecs", "job");
@@ -163,6 +165,8 @@ run_args parse_run_args(int argc, const char *const argv[]) {
 			result.options.int_precision = parse_int_precision(int_precision_str);
 			result.options.float_precision = parse_float_precision(run_mode::dist, float_precision_str);
 			result.options.quiet = quiet;
+			result.options.was_resumed = false;
+			result.options.resume_filename = defaults::resume_filename;
 			result.jobs = parse_dist_jobs(jobspec_str);
 		} else if (mode_str == "resume") {
 			check_option_absent(args, "resume", "in1");
@@ -181,10 +185,13 @@ run_args parse_run_args(int argc, const char *const argv[]) {
 			result.options.use_opencl = !no_opencl;
 			result.options.quiet = quiet;
 
-			if (!args.count("in")) {
-				result.options.in1_path = defaults::resume_filename;
+			result.options.was_resumed = true;
+			if (args.count("in")) {
+				result.options.resume_filename = result.options.in1_path;
+			} else {
+				result.options.resume_filename = defaults::resume_filename;
 			}
-			check_file_input(result.options.in1_path);
+			check_file_input(result.options.resume_filename);
 		} else {
 			throw invalid_argument("The argument ('" + mode_str + "') for option 'mode' is invalid");
 		}

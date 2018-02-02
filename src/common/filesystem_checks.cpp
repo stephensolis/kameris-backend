@@ -25,8 +25,6 @@ void check_directory_input(const string &dirname) {
 }
 
 void check_directory_output(const string &dirname) {
-	namespace fs = boost::filesystem;
-
 	try {
 		fs::path path(dirname);
 
@@ -45,8 +43,6 @@ void check_directory_output(const string &dirname) {
 }
 
 void check_file_input(const string &filename) {
-	namespace fs = boost::filesystem;
-
 	try {
 		fs::path path(filename);
 
@@ -62,8 +58,6 @@ void check_file_input(const string &filename) {
 }
 
 void check_file_output(const string &filename) {
-	namespace fs = boost::filesystem;
-
 	try {
 		fs::path path(filename);
 

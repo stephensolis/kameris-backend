@@ -61,9 +61,9 @@ SCENARIO("mmg-formats binary IO", "[mmg-formats][common][binary]") {
 		WHEN("calling write_map_binary then read_map_binary") {
 			THEN("an empty map is returned") {
 				stringstream stream;
-				write_map_binary(stream, map<uint32_t, uint32_t>());
+				write_map_binary(stream, map<uint64_t, uint32_t>());
 
-				auto read_map = read_map_binary<uint32_t, uint32_t>(stream, 0);
+				auto read_map = read_map_binary<uint64_t, uint32_t>(stream, 0);
 
 				CHECK(read_map.empty());
 			}
@@ -73,12 +73,12 @@ SCENARIO("mmg-formats binary IO", "[mmg-formats][common][binary]") {
 	GIVEN("A map") {
 		WHEN("calling write_map_binary then read_map_binary") {
 			THEN("the original value is returned") {
-				map<uint32_t, uint32_t> orig_map = {{1, 2}, {3, 4}};
+				map<uint64_t, uint32_t> orig_map = {{1, 2}, {3, 4}};
 
 				stringstream stream;
 				write_map_binary(stream, orig_map);
 
-				auto read_map = read_map_binary<uint32_t, uint32_t>(stream, 2);
+				auto read_map = read_map_binary<uint64_t, uint32_t>(stream, 2);
 
 				CHECK(orig_map == read_map);
 			}

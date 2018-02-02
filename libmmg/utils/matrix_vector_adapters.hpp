@@ -60,6 +60,12 @@ namespace mmg {
 		T &operator()(size_t i, size_t j) {
 			return _data[(i * _cols) + j];
 		}
+		const T &operator[](size_t i) const {
+			return _data[i];
+		}
+		T &operator[](size_t i) {
+			return _data[i];
+		}
 		const T *data() const {
 			return _data;
 		}
@@ -71,6 +77,9 @@ namespace mmg {
 		}
 		size_t cols() const {
 			return _cols;
+		}
+		size_t size() const {
+			return _rows * _cols;
 		}
 	};
 
@@ -131,6 +140,12 @@ namespace mmg {
 		T *data() {
 			return _data;
 		}
+		size_t rows() const {
+			return 1;
+		}
+		size_t cols() const {
+			return _size;
+		}
 		size_t size() const {
 			return _size;
 		}
@@ -145,7 +160,7 @@ namespace mmg {
 
 	 private:
 		Map<Key, T, MapArgs...> _data;
-		const size_t _length;
+		size_t _length;
 
 	 public:
 		SparseVectorAdapter(Map<Key, T, MapArgs...> &&data, size_t length) : _data(data), _length(length) {}

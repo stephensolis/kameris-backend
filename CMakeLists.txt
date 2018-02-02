@@ -33,6 +33,7 @@ endif()
 file(GLOB_RECURSE PROJECT_SOURCES
 	 benchmarks/*.[ch]pp
 	 libmmg/*.[ch]pp
+	 minimal-clis/*.[ch]pp
 	 mmg-formats/cpp/*.[ch]pp
 	 src/*.[ch]pp
 	 tests/*.[ch]pp)

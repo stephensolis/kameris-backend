@@ -11,10 +11,6 @@ class Checkpointer {
 	struct state {
 		uint8_t stage_num;
 		uint32_t stage_pos;
-
-		inline bool is_initial() const {
-			return stage_num == 0;
-		}
 	};
 	static constexpr size_t state_size = sizeof state().stage_num + sizeof state().stage_pos;
 

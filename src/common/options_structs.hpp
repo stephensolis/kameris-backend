@@ -24,6 +24,9 @@ struct run_options {
 
 	bool quiet;
 
+	bool was_resumed;
+	std::string resume_filename;
+
 	//currently unused
 	unsigned blocksize;
 	bool use_cuda;
@@ -31,7 +34,7 @@ struct run_options {
 };
 template <class Archive>
 void serialize(Archive &archive, run_options &data) {
-	//intentionally don't export threads, quiet, blocksize, use_cuda, use_opencl
+	//intentionally don't export threads, quiet, blocksize, use_cuda, use_opencl, was_resumed, resume_filename
 	//  since they are overridden on resume anyway, see job_execution
 	archive(data.in1_path, data.in2_path, data.out_path, data.int_precision, data.float_precision);
 }
