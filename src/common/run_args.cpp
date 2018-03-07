@@ -22,7 +22,7 @@ namespace cereal {
 	void load(cereal::PortableBinaryInputArchive &archive, bool &val) {
 		uint8_t store_val;
 		archive(store_val);
-		val = !!store_val;
+		val = !!store_val; // NOLINT
 	}
 }
 

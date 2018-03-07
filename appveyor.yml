@@ -97,9 +97,7 @@ build_script:
   - mkdir build && cd build
   - cmake -G "NMake Makefiles" -DBOOST_ROOT=C:/Libraries/boost_%BOOST_VERSION% -DBOOST_LIBRARYDIR=C:/Libraries/boost_%BOOST_VERSION%/%BOOST_LIBDIR%-%BOOST_LIB_VERSION% -DBoost_COMPILER=-%BOOST_COMPILER_VERSION% ..
   - if "%JOB%"=="compile" nmake
-before_test:
-  - bash -c "if [[ $JOB = 'lint' ]]; then sed -i '/FixNamespaceComments.*/d' ../.clang-format; fi"
 test_script:
   - if "%JOB%"=="compile" nmake check-tests
-  #- bash -c "if [[ $JOB = 'lint' ]]; then ! nmake //nologo check-lint | grep -Ev '(Scanning dependencies of target|Built target)'; fi"
+  - bash -c "if [[ $JOB = 'lint' ]]; then ! nmake //nologo check-lint | grep -Ev '(Scanning dependencies of target|Built target)'; fi"
   - bash -c "if [[ $JOB = 'lint' ]]; then ! nmake //nologo check-format | grep -Ev '(Scanning dependencies of target|Built target)'; fi"

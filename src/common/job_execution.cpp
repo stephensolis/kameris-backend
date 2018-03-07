@@ -13,7 +13,6 @@
 #include <boost/variant.hpp>
 
 #include <libmmg/utils/parallel.hpp>
-#include <mmg-formats/cpp/all_formats.hpp>
 
 #include "checkpointer.hpp"
 #include "defaults.hpp"
@@ -27,7 +26,7 @@ using namespace mmg;
 namespace fs = boost::filesystem;
 
 
-Checkpointer setup_resume_file(const run_args &args, on_confirm_action_t on_confirm_action) {
+Checkpointer setup_resume_file(const run_args &args, on_confirm_action_t on_confirm_action) { // NOLINT
 	if (args.options.was_resumed) {
 		fstream resume_file(args.options.resume_filename, ios::in | ios::out | ios::binary);
 		return Checkpointer(std::move(resume_file), false);
@@ -71,6 +70,7 @@ class descr_repr_executor : public repr_executor {
 
 	void run(on_confirm_action_t on_confirm_action, on_run_start_t on_run_start, on_stage_change_t on_stage_change,
 		/**/ on_progress_t on_progress) const override {
+		/*
 		//open input file
 		repr_reader input_reader(_options.in1_path);
 		const repr_header &input_header = input_reader.header();
@@ -106,6 +106,7 @@ class descr_repr_executor : public repr_executor {
 		for (size_t i = 0; i < futures.size(); ++i) {
 			futures[i].wait();
 		}
+		*/
 	}
 };
 

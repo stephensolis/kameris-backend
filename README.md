@@ -37,12 +37,19 @@ You may wish to see the following papers for further reference:
 
 Pre-built binaries for Windows, Linux, and macOS [are available here](https://github.com/stephensolis/modmap-generator-cpp/releases/latest).
 
-For best performance, make sure you download the version corresponding to the latest instruction set your CPU supports (if unsure, you can check with [CPU-Z](http://www.cpuid.com/softwares/cpu-z.html), or just pick the SSE3 version and sacrifice performance).
+For best performance, make sure you download the version corresponding to the latest instruction set your CPU supports (if unsure, you can check with [CPU-Z](http://www.cpuid.com/softwares/cpu-z.html), or just pick the SSE version and sacrifice performance).
+
+<img src="http://portal.nysc.org.ng/nysc2/Images/warning-512.png" width="28" align="top"/> **Note**: `mmg-cli` is currently incomplete (missing some parts of `src/mmg-cli/mmg-cli.cpp` and `src/common/job_execution.cpp`). Instead, use `minimal-cli`.
 
 Try putting some FASTA files in a directory `fasta`, creating a directory `output`, then running:
 
 	mmg-cli repr cgr-k=9 --in fasta --out output
 	mmg-cli dist manhattan --in output/cgr-k=9.mm-repr --out output
+
+Or, equivalently using the `minimal-cli` programs:
+
+	generation_cgr cgr fasta/ output/cgr-k=9.mm-repr 9 32
+	generation_dists output/cgr-k=9.mm-repr output/dists manhat
 
 ## Working with output files
 
@@ -137,9 +144,10 @@ Libraries to read and write these formats, for C++, Python, MATLAB, and Mathemat
 	- `io`: Reading and writing FASTA sequences and binary-encoded representations
 	- `representations`: Generating representations (FCGR, Descriptors, ...)
 	- `utils`: Other useful tools (parallel execution, timing, etc.)
-- `mmg-formats`: Libraries to read and write the `.mm-repr` and `.mm-dist` file formats
+- `mmg-formats`: Libraries to read and write the `.mm-repr` and `.mm-dist` file formats, this is a link to [stephensolis/modmap-generator-formats](https://github.com/stephensolis/modmap-generator-formats)
 - `src`: The program
 	- `common`: Code independent of user interface
+	- `minimal-cli`: Two minimal command-line interfaces implementing a subset of `mmg-cli repr` (`generation_cgr`) and `mmg-cli dist` (`generation_dists`)
 	- `mmg-cli`: The command-line interface
 - `tests`: The test suite
 
@@ -179,6 +187,8 @@ The following compilers have been tested:
 | Clang                   | 3.8, 3.9, 4.0, 5.0, 6.0 <br> Apple LLVM 6.1, 7.0, 7.3, 8.0, 8.1, 9.0 |
 
 ### To compile:
+
+<img src="http://portal.nysc.org.ng/nysc2/Images/warning-512.png" width="28" align="top"/> **Note**: `minimal-cli` does not use the CMake-based build system described below. Instead, use the `build_*` scripts found in `src/minimal-cli`.
 
 Create a new directory, and inside the directory run `cmake (<options>) <path to source code>` followed by `make` (on a Unix platform) or `nmake` (on Windows).
 

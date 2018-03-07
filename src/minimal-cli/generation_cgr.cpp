@@ -18,8 +18,8 @@
 #include <mmg-formats/cpp/repr_writer.hpp>
 
 // clang-format off
-#include <src/mmg-cli/progress_bar.hpp>
-#include <src/mmg-cli/progress_bar.cpp>
+#include "../mmg-cli/progress_bar.hpp"
+#include "../mmg-cli/progress_bar.cpp"
 // clang-format on
 
 using namespace std;
