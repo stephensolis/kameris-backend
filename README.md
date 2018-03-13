@@ -4,7 +4,7 @@
 
 | Travis <br> (Ubuntu artful, macOS) | AppVeyor <br> (Windows) | Shippable <br> (Debian sid) | Wercker <br> (Alpine Linux, Arch, Fedora) |
 |:-----:|:-----:|:-----:|:-----:|
-| [![Travis](https://travis-ci.org/stephensolis/modmap-generator-cpp.svg?branch=master)](https://travis-ci.org/stephensolis/modmap-generator-cpp) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/2t4ydkdixbc00ybv?svg=true)](https://ci.appveyor.com/project/stephensolis/modmap-generator-cpp) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/bc733073537cd665d597942188c5a4ff/s/master)](https://app.wercker.com/project/byKey/bc733073537cd665d597942188c5a4ff) |
+| [![Travis](https://travis-ci.org/stephensolis/modmap-generator-cpp.svg?branch=master)](https://travis-ci.org/stephensolis/modmap-generator-cpp) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/rg09cx4gk3o254ki?svg=true)](https://ci.appveyor.com/project/stephensolis/modmap-generator-cpp) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/bc733073537cd665d597942188c5a4ff/s/master)](https://app.wercker.com/project/byKey/bc733073537cd665d597942188c5a4ff) |
 
 | Coverity | Codacy | Coveralls | Codecov |
 |:-----:|:-----:|:-----:|:-----:|
