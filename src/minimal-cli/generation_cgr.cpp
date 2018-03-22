@@ -82,13 +82,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	pair<unordered_set<char>, unordered_set<char>> twocgr_chars;
-	//TODO: implement splitting of argument
+	//TODO: implement splitting of twocgr argument
 
 	vector<string> filenames;
 	for (const auto &entry : boost::make_iterator_range(fs::directory_iterator(argv[2]), {})) {
 		filenames.push_back(absolute(entry.path()).string());
 	}
-	sort(filenames.begin(), filenames.end());
+	//there seems to be an odd bug in macOS where sort will segfault here (?), so we use stable_sort instead
+	stable_sort(filenames.begin(), filenames.end());
 
 	cout << filenames.size() << " files, using " << num_threads << " threads" << endl << endl;
 
