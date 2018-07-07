@@ -6,17 +6,17 @@
 #include <thread>
 #include <vector>
 
-#include <libmmg/distances.hpp>
-#include <libmmg/representations.hpp>
-#include <libmmg/utils.hpp>
+#include <libkameris/distances.hpp>
+#include <libkameris/representations.hpp>
+#include <libkameris/utils.hpp>
 
 // clang-format off
-#include <src/mmg-cli/progress_bar.hpp>
-#include <src/mmg-cli/progress_bar.cpp>
+#include <src/kameris-cli/progress_bar.hpp>
+#include <src/kameris-cli/progress_bar.cpp>
 // clang-format on
 
 using namespace std;
-using namespace mmg;
+using namespace kameris;
 
 int main() {
 	//setup

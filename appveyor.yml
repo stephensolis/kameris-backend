@@ -1,87 +1,33 @@
 version: "#{build}"
 
 image:
-  - Visual Studio 2015
   - Visual Studio 2017
 
 environment:
   matrix:
     - JOB: compile
       ARCH: amd64
-      BOOST_VERSION: 1_59_0
-    - JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_60_0
-    - JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_62_0
-    - JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_63_0
-    - JOB: compile
-      ARCH: x86
-      BOOST_VERSION: 1_63_0
-    - JOB: compile
-      ARCH: amd64
       BOOST_VERSION: 1_64_0
     - JOB: compile
       ARCH: amd64
       BOOST_VERSION: 1_65_1
     - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_66_0
+    - JOB: compile
+      ARCH: amd64
+      BOOST_VERSION: 1_67_0
+    - JOB: compile
       ARCH: x86
-      BOOST_VERSION: 1_65_1
+      BOOST_VERSION: 1_67_0
     - JOB: compile
       ARCH: amd64
       CXX: clang-cl
-      BOOST_VERSION: 1_62_0
+      BOOST_VERSION: 1_67_0
 
     - JOB: lint
       ARCH: amd64
-      BOOST_VERSION: 1_63_0
-
-matrix:
-  exclude:
-    - image: Visual Studio 2017
-      JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_59_0
-    - image: Visual Studio 2017
-      JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_60_0
-    - image: Visual Studio 2017
-      JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_62_0
-    - image: Visual Studio 2017
-      JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_63_0
-    - image: Visual Studio 2017
-      JOB: compile
-      ARCH: x86
-      BOOST_VERSION: 1_63_0
-    - image: Visual Studio 2015
-      JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_64_0
-    - image: Visual Studio 2015
-      JOB: compile
-      ARCH: amd64
-      BOOST_VERSION: 1_65_1
-    - image: Visual Studio 2015
-      JOB: compile
-      ARCH: x86
-      BOOST_VERSION: 1_65_1
-    - image: Visual Studio 2017
-      JOB: compile
-      ARCH: amd64
-      CXX: clang-cl
-      BOOST_VERSION: 1_62_0
-    - image: Visual Studio 2017
-      JOB: lint
-      ARCH: amd64
-      BOOST_VERSION: 1_63_0
+      BOOST_VERSION: 1_67_0
 
 init:
   - if exist "C:\Program Files (x86)\Microsoft Visual Studio\2017" ( appveyor SetVariable -Name VS_VER -Value 2017 ) else ( appveyor SetVariable -Name VS_VER -Value 2015 )

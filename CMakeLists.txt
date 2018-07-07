@@ -21,7 +21,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "ReleaseIntel")
 	endif()
 endif()
 
-project(modmap-generator-cpp
+project(kameris-backend
 		LANGUAGES C CXX)
 
 # note CMAKE_CXX_COMPILER_ID isn't defined until here
@@ -32,14 +32,17 @@ endif()
 # source file lists
 file(GLOB_RECURSE PROJECT_SOURCES
 	 benchmarks/*.[ch]pp
-	 libmmg/*.[ch]pp
-	 mmg-formats/cpp/*.[ch]pp
+	 libkameris/*.[ch]pp
+	 kameris-formats/cpp/*.[ch]pp
 	 src/*.[ch]pp
 	 tests/*.[ch]pp)
-file(GLOB_RECURSE SOURCES_MMG_CLI
-	 src/common/*.cpp
-	 src/mmg-cli/*.cpp)
-file(GLOB_RECURSE SOURCES_TEST_MMG
+file(GLOB_RECURSE SOURCES_GENERATION_CGR
+	 src/generation_cgr.cpp
+	 src/common/*.cpp)
+file(GLOB_RECURSE SOURCES_GENERATION_DISTS
+	 src/generation_dists.cpp
+	 src/common/*.cpp)
+file(GLOB_RECURSE SOURCES_TEST_KAMERIS
 	 tests/*.cpp)
 
 # check whether compiler uses MSVC-like options or gcc-like options
@@ -108,43 +111,51 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories(SYSTEM "${PROJECT_SOURCE_DIR}/external")
 
 # sets up a release target
-function(add_cli_intel_release_target target_name flags_windows flags_linux build_type)
-	add_executable(${target_name} ${SOURCES_MMG_CLI})
-	target_link_libraries(${target_name} ${Boost_LIBRARIES} Threads::Threads)
+function(add_cli_intel_release_target arch_name flags_windows flags_linux)
+	add_executable("generation_cgr_${arch_name}" ${SOURCES_GENERATION_CGR})
+	target_link_libraries("generation_cgr_${arch_name}" ${Boost_LIBRARIES} Threads::Threads)
+	add_executable("generation_dists_${arch_name}" ${SOURCES_GENERATION_DISTS})
+	target_link_libraries("generation_dists_${arch_name}" ${Boost_LIBRARIES} Threads::Threads)
 
 	# platform-specific flags
 	if(WIN32)
-		target_compile_options(${target_name} PRIVATE "${flags_windows}")
+		target_compile_options("generation_cgr_${arch_name}" PRIVATE "${flags_windows}")
+		target_compile_options("generation_dists_${arch_name}" PRIVATE "${flags_windows}")
 	else()
-		target_compile_options(${target_name} PRIVATE "${flags_linux}")
+		target_compile_options("generation_cgr_${arch_name}" PRIVATE "${flags_linux}")
+		target_compile_options("generation_dists_${arch_name}" PRIVATE "${flags_linux}")
 	endif()
 
 	# version info
-	target_compile_definitions(${target_name} PRIVATE -DBUILD_TYPE="${build_type}")
+	target_compile_definitions("generation_cgr_${arch_name}" PRIVATE -DBUILD_TYPE="release-${arch_name}")
+	target_compile_definitions("generation_dists_${arch_name}" PRIVATE -DBUILD_TYPE="release-${arch_name}")
 endfunction()
 
 # add main targets
 if(CMAKE_BUILD_TYPE STREQUAL "ReleaseIntel")
-	add_cli_intel_release_target(mmg-cli-sse3 "/QxSSE3" "-xSSE3" "release-sse3")
-	add_cli_intel_release_target(mmg-cli-sse41 "/QxSSE4.1" "-xSSE4.1" "release-sse4.1")
-	add_cli_intel_release_target(mmg-cli-avx "/QxAVX" "-xAVX" "release-avx")
-	add_cli_intel_release_target(mmg-cli-avx2 "/QxCORE-AVX2" "-xCORE-AVX2" "release-avx2")
-	add_cli_intel_release_target(mmg-cli-avx512 "/QxCORE-AVX512" "-xCORE-AVX512" "release-avx512")
+	add_cli_intel_release_target(sse3 "/QxSSE3" "-xSSE3")
+	add_cli_intel_release_target(sse41 "/QxSSE4.1" "-xSSE4.1")
+	add_cli_intel_release_target(avx "/QxAVX" "-xAVX")
+	add_cli_intel_release_target(avx2 "/QxCORE-AVX2" "-xCORE-AVX2")
+	add_cli_intel_release_target(avx512 "/QxCORE-AVX512" "-xCORE-AVX512")
 else()
-	add_executable(mmg-cli ${SOURCES_MMG_CLI})
-	target_link_libraries(mmg-cli ${Boost_LIBRARIES} Threads::Threads)
+	add_executable(generation_cgr ${SOURCES_GENERATION_CGR})
+	target_link_libraries(generation_cgr ${Boost_LIBRARIES} Threads::Threads)
+	add_executable(generation_dists ${SOURCES_GENERATION_DISTS})
+	target_link_libraries(generation_dists ${Boost_LIBRARIES} Threads::Threads)
 
 	string(TOLOWER "${CMAKE_BUILD_TYPE}" build_type)
-	target_compile_definitions(mmg-cli PRIVATE -DBUILD_TYPE="${build_type}")
+	target_compile_definitions(generation_cgr PRIVATE -DBUILD_TYPE="${build_type}")
+	target_compile_definitions(generation_dists PRIVATE -DBUILD_TYPE="${build_type}")
 endif()
 
 # add test target
-add_executable(test-mmg EXCLUDE_FROM_ALL
-			   ${SOURCES_TEST_MMG})
-target_link_libraries(test-mmg ${Boost_LIBRARIES} Threads::Threads)
+add_executable(test-kameris EXCLUDE_FROM_ALL
+			   ${SOURCES_TEST_KAMERIS})
+target_link_libraries(test-kameris ${Boost_LIBRARIES} Threads::Threads)
 add_custom_target(check-tests
-				  COMMAND test-mmg VERBATIM
-				  DEPENDS test-mmg)
+				  COMMAND test-kameris VERBATIM
+				  DEPENDS test-kameris)
 
 # setup for style checking targets
 string(REGEX REPLACE "([^;]+)" "-I\\1" BOOST_INCLUDES_STRING "${Boost_INCLUDE_DIRS}")

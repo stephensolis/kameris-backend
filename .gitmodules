@@ -1,6 +1,6 @@
 [submodule "benchmarks/mathematica"]
 	path = benchmarks/mathematica
-	url = https://github.com/stephensolis/modmap-generator-mma
-[submodule "mmg-formats"]
-	path = mmg-formats
-	url = https://github.com/stephensolis/modmap-generator-formats
+	url = https://github.com/stephensolis/modmap-generator
+[submodule "kameris-formats"]
+	path = kameris-formats
+	url = https://github.com/stephensolis/kameris-formats

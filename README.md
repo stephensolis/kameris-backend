@@ -1,16 +1,16 @@
-# modmap-generator-cpp
+# kameris-backend
 
 ### Build Status
 
 | Travis <br> (Ubuntu artful, macOS) | AppVeyor <br> (Windows) | Shippable <br> (Debian sid) | Wercker <br> (Alpine Linux, Arch, Fedora) |
 |:-----:|:-----:|:-----:|:-----:|
-| [![Travis](https://travis-ci.org/stephensolis/modmap-generator-cpp.svg?branch=master)](https://travis-ci.org/stephensolis/modmap-generator-cpp) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/rg09cx4gk3o254ki?svg=true)](https://ci.appveyor.com/project/stephensolis/modmap-generator-cpp) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/bc733073537cd665d597942188c5a4ff/s/master)](https://app.wercker.com/project/byKey/bc733073537cd665d597942188c5a4ff) |
+| [![Travis](https://travis-ci.org/stephensolis/kameris-backend.svg?branch=master)](https://travis-ci.org/stephensolis/kameris-backend) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/rg09cx4gk3o254ki?svg=true)](https://ci.appveyor.com/project/stephensolis/kameris-backend) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/6af49af6f2d755f54ee92c964a563c02/s/master)](https://app.wercker.com/project/byKey/6af49af6f2d755f54ee92c964a563c02) |
 
 | Coverity | Codacy | Coveralls | Codecov |
 |:-----:|:-----:|:-----:|:-----:|
-| [![Coverity](https://scan.coverity.com/projects/11296/badge.svg)](https://scan.coverity.com/projects/stephensolis-modmap-generator-cpp) | [![Codacy](https://api.codacy.com/project/badge/Grade/7d0d5cf06d1a4b279b2d4a2e47e51e65)](https://www.codacy.com/app/stephensolis/modmap-generator-cpp) | [![Coveralls](https://coveralls.io/repos/github/stephensolis/modmap-generator-cpp/badge.svg?branch=master)](https://coveralls.io/github/stephensolis/modmap-generator-cpp?branch=master) | [![Codecov](https://codecov.io/gh/stephensolis/modmap-generator-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/stephensolis/modmap-generator-cpp) |
+| [![Coverity](https://scan.coverity.com/projects/16223/badge.svg)](https://scan.coverity.com/projects/stephensolis-kameris-backend) | [![Codacy](https://api.codacy.com/project/badge/Grade/8969d78e2ced4a4bb009ac3b1fecebfb)](https://www.codacy.com/app/stephensolis/kameris-backend) | [![Coveralls](https://coveralls.io/repos/github/stephensolis/kameris-backend/badge.svg?branch=master)](https://coveralls.io/github/stephensolis/kameris-backend?branch=master) | [![Codecov](https://codecov.io/gh/stephensolis/kameris-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/stephensolis/kameris-backend) |
 
-This is a fast C++ implementation of some backend generation functionality for Molecular Distance Maps. Unless you are writing your own pipeline, you likely want to use this program via [stephensolis/modmap-toolkit](https://github.com/stephensolis/modmap-toolkit). Alternately, you can use the older ([and slower](#benchmarks)) Mathematica implementation: [stephensolis/modmap-generator-mma](https://github.com/stephensolis/modmap-generator-mma).
+This is a fast C++ implementation of some backend generation functionality used by [Kameris](https://github.com/stephensolis/kameris).
 
 It supports the following representations of DNA sequences:
 
@@ -27,7 +27,7 @@ and the following distances:
 - [SSIM](https://ece.uwaterloo.ca/~z70wang/research/ssim/)
 - [Approximate Information Distance](http://arxiv.org/abs/cs/0111054)
 
-You may wish to see the following papers for further reference:
+You may be interested the following papers for further reference:
 
 - [Mapping the Space of Genomic Signatures](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0119815)
 - [An investigation into inter- and intragenomic variations of graphic genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0655-4)
@@ -35,125 +35,38 @@ You may wish to see the following papers for further reference:
 
 ## Getting Started
 
-Pre-built binaries for Windows, Linux, and macOS [are available here](https://github.com/stephensolis/modmap-generator-cpp/releases/latest).
+Pre-built binaries for Windows, Linux, and macOS [are available here](https://github.com/stephensolis/kameris-backend/releases/latest).
 
 For best performance, make sure you download the version corresponding to the latest instruction set your CPU supports (if unsure, you can check with [CPU-Z](http://www.cpuid.com/softwares/cpu-z.html), or just pick the SSE version and sacrifice performance).
 
-<img src="http://portal.nysc.org.ng/nysc2/Images/warning-512.png" width="28" align="top"/> **Note**: `mmg-cli` is currently incomplete (missing some parts of `src/mmg-cli/mmg-cli.cpp` and `src/common/job_execution.cpp`). Instead, use `minimal-cli`.
-
 Try putting some FASTA files in a directory `fasta`, creating a directory `output`, then running:
-
-	mmg-cli repr cgr-k=9 --in fasta --out output
-	mmg-cli dist manhattan --in output/cgr-k=9.mm-repr --out output
-
-Or, equivalently using the `minimal-cli` programs:
 
 	generation_cgr cgr fasta/ output/cgr-k=9.mm-repr 9 32
 	generation_dists output/cgr-k=9.mm-repr output/dists manhat
 
 ## Working with output files
 
-The format of output files [is documented here](https://github.com/stephensolis/modmap-generator-formats). `repr` mode will generate files with the extension `.mm-repr` and `dist` mode will generate files with the extension `.mm-dist`.
+The format of output files [is documented here](https://github.com/stephensolis/kameris-formats). `generation_cgr` will generate files with the extension `.mm-repr` and `generation_dists` will generate files with the extension `.mm-dist`.
 
-Libraries to read and write these formats, for C++, Python, MATLAB, and Mathematica, can be found in the `mmg-formats` folder.
-
-## Usage
-
-	Usage: mmg-cli <mode> <job>[,<job>...] [options]
-
-	Modes:
-	  repr     Generate vectors or matrices suitable for distance computations
-	  dist     Compute pairwise distance matrices
-	  resume   Resume an interrupted task
-	  help     Print a help message
-	  version  Print version information
-
-	Options:
-	  --in <path>
-	     Input file or directory
-	     (in mode 'dist', this produces a symmetric pairwise distance matrix for
-	      every pair of inputs in the given dataset)
-	  --in1, --in2 <path> [only mode 'dist']
-	     Input files or directories
-	     (in mode 'dist', this produces a pairwise distance matrix where rows
-	      correspond to inputs in 'in1' and columns correspond to inputs in 'in2')
-	  --out <path>
-	     Output file or directory
-	  --threads N
-	     Number of CPU threads to use [default: autodetect, all threads]
-	  --int-precision (8|16|32|64)
-	     Integer precision [default: 64]
-	  --float-precision (single|double)
-	     Floating-point precision
-	     [default: single ('dist' mode), double ('repr' mode)]
-	  --quiet
-	     Skip any interactive prompts
-
-	Jobs for 'repr' mode:
-	  Input as folders of FASTA files:
-	    cgr-k=N[-freq][-order=XXXX]   (Chaos Game Representation)
-	      Options:
-	        k           Length of the substrings to count
-	        freq        Use relative frequencies instead of occurrence counts
-	        order       Order of the labels (CW from bottom-left) [default: ACGT]
-	    twocgr-k=N[-freq][-order={X[...],X[...]}]   (2-state CGR)
-	      Options:
-	        k           Length of the substrings to count
-	        freq        Use relative frequencies instead of occurrence counts
-	        order       Order of the labels (left, then right) [default: AG,CT]
-	    sparsecgr-k=N[-freq][-order=XXXX]  (Sparse CGR)
-	      Options:
-	        k           Length of the substrings to count
-	        freq        Use relative frequencies instead of occurrence counts
-	        order       Order of the labels (CW from bottom-left) [default: ACGT]
-	    sparsetwocgr-k=N[-freq][-order={X[...],X[...]}]  (Sparse 2-state CGR)
-	      Options:
-	        k           Length of the substrings to count
-	        freq        Use relative frequencies instead of occurrence counts
-	        order       Order of the labels (left, then right) [default: AG,CT]
-	    Note: if there are multiple sequences in the same FASTA file,
-	          representations will be computed for each sequence and added
-	          elementwise to produce one output per file.
-	  Input as any dense matrix representation:
-	    descr-bins={N,...}-windows={N,...}  (Descriptor)
-	      Options:
-	        bins     List of bin values
-	        windows  List of window sizes
-
-	Jobs for 'dist' mode:
-	  Input as any representation:
-	    euclidean           (Euclidean)
-	    sqeuclidean         (Squared Euclidean)
-	    manhattan           (Manhattan)
-	    cosine              (Cosine)
-	    pearson             (Pearson correlation coefficient)
-	    approxinfo[-est=X]  (Approximate Information distance)
-	      Options:
-	        est    Estimation formula (choices: A, B) [default: A]
-	  Input as any dense matrix representation:
-	    ssim  (Structural Similarity Index)
+Libraries to read and write these formats, for C++ and Python, can be found in the `kameris-formats` folder.
 
 ## Directory Structure
 
 - `benchmarks`: Used to generate the benchmark results below
 - `external`: External libraries and code
-- `docs`: Documentation
-- `libmmg`: A reusable header-only library for working with the representations and distances of this project
+- `libkameris`: A reusable header-only library for working with the representations and distances of this project
 	- `distances`: Distance computation for dense vectors/matrices
 	- `distances-sparse`: Distance computation for sparse vectors/matrices
 	- `io`: Reading and writing FASTA sequences and binary-encoded representations
 	- `representations`: Generating representations (FCGR, Descriptors, ...)
 	- `utils`: Other useful tools (parallel execution, timing, etc.)
-- `mmg-formats`: Libraries to read and write the `.mm-repr` and `.mm-dist` file formats, this is a link to [stephensolis/modmap-generator-formats](https://github.com/stephensolis/modmap-generator-formats)
-- `src`: The program
-	- `common`: Code independent of user interface
-	- `minimal-cli`: Two minimal command-line interfaces implementing a subset of `mmg-cli repr` (`generation_cgr`) and `mmg-cli dist` (`generation_dists`)
-	- `mmg-cli`: The command-line interface
+- `kameris-formats`: Libraries to read and write the `.mm-repr` and `.mm-dist` file formats, this is a link to [stephensolis/kameris-formats](https://github.com/stephensolis/kameris-formats)
+- `src`: The code for two minimal command-line interfaces implementing CGR generation (`generation_cgr`) and distance matrix generation (`generation_dists`)
 - `tests`: The test suite
 
 ## Benchmarks
 
-Below, 'Mathematica' means [stephensolis/modmap-generator-mma](https://github.com/stephensolis/modmap-generator-mma) at commit [212d0fda](https://github.com/stephensolis/modmap-generator-mma/tree/212d0fda91f58e7e7111ef5bfdc1dde0810b8c74), and 'C++' means this repository at commit [8af2864a](https://github.com/stephensolis/modmap-generator-cpp/tree/8af2864a7db76daaa29de3d60585b70e7e6e37fd).
+Below, 'Mathematica' means [stephensolis/modmap-generator](https://github.com/stephensolis/modmap-generator) at commit [212d0fda](https://github.com/stephensolis/modmap-generator/tree/212d0fda91f58e7e7111ef5bfdc1dde0810b8c74), and 'C++' means this repository at commit [8af2864a](https://github.com/stephensolis/kameris-backend/tree/8af2864a7db76daaa29de3d60585b70e7e6e37fd).
 
 Tests were performed on an AWS [c4.4xlarge](https://aws.amazon.com/ec2/instance-types/#c4) (8 cores/16 threads of an Intel Xeon E5-2666 v3), using Mathematica 11.0.1 and the AVX2-release version of this software. Benchmarking code can be found in the `benchmarks/` folder.
 
@@ -181,14 +94,12 @@ The following compilers have been tested:
 
 | Compiler                | Version                                                              |
 |-------------------------|----------------------------------------------------------------------|
-| Microsoft Visual Studio | 2015 (19.0), 2017 (19.1)                                             |
+| Microsoft Visual Studio | 2017 (19.1)                                                          |
 | Intel C++ Compiler      | 2017 (17.0), 2018 (18.0)                                             |
 | GCC                     | 5.3, 5.4, 6.2, 6.3, 6.4, 7.1                                         |
 | Clang                   | 3.8, 3.9, 4.0, 5.0, 6.0 <br> Apple LLVM 6.1, 7.0, 7.3, 8.0, 8.1, 9.0 |
 
 ### To compile:
-
-<img src="http://portal.nysc.org.ng/nysc2/Images/warning-512.png" width="28" align="top"/> **Note**: `minimal-cli` does not use the CMake-based build system described below. Instead, use the `build_*` scripts found in `src/minimal-cli`.
 
 Create a new directory, and inside the directory run `cmake (<options>) <path to source code>` followed by `make` (on a Unix platform) or `nmake` (on Windows).
 
@@ -196,14 +107,14 @@ On Windows, the default Visual Studio generators are untested and may not work. 
 
 You can set `-DCMAKE_BUILD_TYPE=` to one of the following possible values:
 
-- `Debug` (default): build a single binary `mmg-cli` in debug mode (including debugging information)
-- `Release`: build a single binary `mmg-cli` in release mode
-- `ReleaseIntel`: use Intel's C++ compiler (`icl`/`icpc`) to build five separate binaries, each optimized for a different platform:
-	- `mmg-cli-sse3`: optimized for SSE3
-	- `mmg-cli-sse41`: optimized for SSE4.1
-	- `mmg-cli-avx`: optimized for AVX
-	- `mmg-cli-avx2`: optimized for AVX2
-	- `mmg-cli-avx512`: optimized for AVX-512
+- `Debug` (default): build a single binary `kameris-cli` in debug mode (including debugging information)
+- `Release`: build a single binary `kameris-cli` in release mode
+- `ReleaseIntel`: use Intel's C++ compiler (`icl`/`icpc`) to build ten separate binaries, each optimized for a different platform:
+	- `generation_[cgr|dists]_sse3`: optimized for SSE3
+	- `generation_[cgr|dists]_sse41`: optimized for SSE4.1
+	- `generation_[cgr|dists]_avx`: optimized for AVX
+	- `generation_[cgr|dists]_avx2`: optimized for AVX2
+	- `generation_[cgr|dists]_avx512`: optimized for AVX-512
 - `Coverage`: used to compute line coverage for tests with the `coverage` target (see below)
 
 On Windows when not using MSVC (eg. Intel's compiler with `-DCMAKE_BUILD_TYPE=ReleaseIntel`), you likely need to set `-DBOOST_ROOT=`, `-DBOOST_LIBRARYDIR=`, and `-DBoost_COMPILER=`, for example as follows:

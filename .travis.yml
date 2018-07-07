@@ -3,7 +3,7 @@ language: cpp
 env:
   global:
     # COVERITY_SCAN_TOKEN
-    - secure: "AS5OPg1+LGfvmAZRA2zpr66IukHRs3iJ/LfKjXAt4H7odlRCu0SB+eg0HuCea7nckCC83RPHWo3r333ts04OzavigDUd3jINzex3779IKFGN1oay9CGdx6Nsu8dqEPhxicNEbOqw5uoD5BT86AJViqSoj2q7mnzUGwIOFUv/wdP4S0HHUFO9xtd4bghLP4FdleM6+zyf+hyLlUQAVCq06sMczqaKbksqzwGIVzSPDtTijD6hxyfKux9phbtsc9ZoNtHtpGvu6MBW/t0zT8uIGD17lGI4/5SWr9Y+cKSUV5XVah1n3W3bwBYLsh1wVoBSKN8TXVVO+k368w6fGSs/3eapJcRE5j4KOxMljVOlGNkyX6pfg+QkbwSLAFhwn4wpGzEx1nd1YTsHDd/FnvYfFxCjY2o5hSuVBg7DPWzH7DXunnCRiCZed2ogGc55RUqzy4Hj70Zjh/CmLo1/9XCk+UnHmcLDvjkHK4cwp68uE4fzBvNyvtt7C51QoyZxovtKomBaLtvi7OuKaZ+8IRfjPZDJis4Vw2N1YTf/8fa3mHICM1SKCxWucI6IJcCs2Cx2kOUkgmN+lJqOIuTWJnDmiBtN3k6SvUvUG6aTcm4p+eJUyumsIjy6gZN7yZxm8+62YQt3IzIBDqTT4W/AFMwalIFQJegVuWYLl7cplabA5d0="
+    - secure: "CTmTP1abEHGoU5BCV/7hTiRTae9vw4GrsPGKyGjXKOdggLl/PuOidlpUY/tr7fwVuS1vZzwB5bKArpJdoqPMffVE0Gb0uNMqEf9mCUhedBsMCiC8FKr0ROZj2HuHGPi69lVkv3OtKAV/7WSoBkCOKp0OZNY3XVI9SXd2CRLyQdsk03JX0+9jg1uLfY/Qmz/hoID2jRFXzCtbdmtQhpLuPZfLbdbrMZRTou3hWjTit+XboIuE5OxwAkIbnEhaMXcmcaIkTc3tBcsBzOl7eQwGZy5AaHmAvPBbrBD+csO7r4GfUoqpPmtohWB0uv9XP7KwO7aw0GA221peoLnV9DTk+N8Use75OwehqDmwX3M5TROU1VsymbhGOjPEjHI6GWNjppQEK2HcVjL63sCFgov69Lz8oof6skgxnzwHLCTOjHmzQM2W3cPjfEmdgpqzcmXNCqaAaBM8ZjzlT2EWEf1GydvfhI7ZiNSbh3rvfOH8PQaFpZoGBjDwuh+rWGByHVYKO35l0lWOV+VQa6/Pq2j0CwdSl6BDQm99iYOtUhObitnRW+HvLeFqyoZCuSl0GMPhy1G4ifI8PK2YoyoxRv64oZmBmhgDFLyRgwItCiVAliqbhhjWWZ0BeGAIE5oHVqtkJ/7mtlmVran3l6DUkrXVb24JhAgOwA38/5aGrdRsEVQ="
 
 matrix:
   include:
@@ -149,7 +149,7 @@ matrix:
         - sudo apt-get install -y gcc g++ libboost-dev libboost-filesystem-dev libboost-program-options-dev
         - export CXX="g++"
         - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-        - export COVERITY_SCAN_PROJECT_NAME='stephensolis/modmap-generator-cpp'
+        - export COVERITY_SCAN_PROJECT_NAME='stephensolis/kameris-backend'
         - export COVERITY_SCAN_NOTIFICATION_EMAIL='stephen@nowhere'
         - export COVERITY_SCAN_BRANCH_PATTERN='master'
         - export COVERITY_SCAN_BUILD_COMMAND_PREPEND='cov-configure --comptype gcc --compiler g++ --template'
