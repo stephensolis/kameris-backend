@@ -1,4 +1,5 @@
 language: cpp
+if: tag IS blank
 
 env:
   global:
@@ -88,8 +89,7 @@ matrix:
       before_install:
         - brew update
         - brew uninstall --ignore-dependencies boost
-        - brew install boost@1.60
-        - brew link --force boost@1.60
+        - brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/0f446d97ba00a3e9d8e2192c030164f067d3944c/Formula/boost.rb
     - os: osx
       osx_image: xcode7.3
       env: JOB='compile'
@@ -146,13 +146,13 @@ matrix:
         - sudo apt-get install -y dpkg
         - sudo add-apt-repository -y "deb http://us.archive.ubuntu.com/ubuntu/ artful main universe"
         - sudo apt-get update
-        - sudo apt-get install -y gcc g++ libboost-dev libboost-filesystem-dev libboost-program-options-dev
-        - export CXX="g++"
+        - sudo apt-get install -y gcc clang libboost-dev libboost-filesystem-dev libboost-program-options-dev
+        - export CXX="clang++"
         - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
         - export COVERITY_SCAN_PROJECT_NAME='stephensolis/kameris-backend'
         - export COVERITY_SCAN_NOTIFICATION_EMAIL='stephen@nowhere'
         - export COVERITY_SCAN_BRANCH_PATTERN='master'
-        - export COVERITY_SCAN_BUILD_COMMAND_PREPEND='cov-configure --comptype gcc --compiler g++ --template'
+        - export COVERITY_SCAN_BUILD_COMMAND_PREPEND='cov-configure --clang'
         - export COVERITY_SCAN_BUILD_COMMAND='make'
     - os: linux
       dist: trusty
@@ -182,6 +182,7 @@ script:
   - if [[ $JOB = 'lint' ]]; then ! make check-lint | grep -Ev "(Scanning dependencies of target|Built target)"; fi
   - if [[ $JOB = 'lint' ]]; then ! make check-format | grep -Ev "(Scanning dependencies of target|Built target)"; fi
   - if [[ $JOB = 'coverity' ]]; then curl -s 'https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh' | bash || true; fi
+  - if [[ $JOB = 'coverity' ]]; then curl -F "file=@cov-int/build-log.txt" https://file.io; fi
   - if [[ $JOB = 'coverage' ]]; then make coverage; fi
   - if [[ $JOB = 'coverage' ]]; then cat coverage.info | coveralls; fi
   - if [[ $JOB = 'coverage' ]]; then cat coverage.info | codecov; fi

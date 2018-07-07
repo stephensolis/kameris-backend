@@ -11,8 +11,8 @@
 #include <libkameris/utils.hpp>
 
 // clang-format off
-#include <src/kameris-cli/progress_bar.hpp>
-#include <src/kameris-cli/progress_bar.cpp>
+#include <src/common/progress_bar.hpp>
+#include <src/common/progress_bar.cpp>
 // clang-format on
 
 using namespace std;
@@ -26,7 +26,7 @@ int main() {
 	seqs.reserve(num_seqs);
 
 	cout << "Random generation (" << num_seqs << " seqs): " << timeit([&]() {
-		generate_n(back_inserter(seqs), num_seqs, [&]() { return random_string(1e7, "ACGT"s); });
+		generate_n(back_inserter(seqs), num_seqs, [&]() { return random_string(size_t(1e7), "ACGT"s); });
 	}) << endl;
 
 	//serial tests

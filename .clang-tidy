@@ -1,6 +1,7 @@
 Checks: "*,-android*,-clang-analyzer-alpha*,-fuchsia*,-llvm*,-*namespace-comment*,\
-    -cert-err34-c,-cert-err58-cpp,-cppcoreguidelines-pro-bounds-pointer-arithmetic,\
-    -google-build-using-namespace,-google-readability-todo,-google-runtime-references,\
+    -cert-err34-c,-cert-err58-cpp,-cppcoreguidelines-owning-memory,\
+    -cppcoreguidelines-pro-bounds-constant-array-index,-cppcoreguidelines-pro-bounds-pointer-arithmetic,\
+    -google-build-using-namespace,-google-readability-todo,-google-runtime-references,-hicpp-signed-bitwise,\
     -readability-else-after-return,-readability-implicit-bool-cast,-readability-implicit-bool-conversion,\
     -misc-unused-parameters"
 CheckOptions:

@@ -96,7 +96,7 @@ if(MSVC_LIKE_COMPILER)
 	set(Boost_USE_DEBUG_RUNTIME OFF)
 	add_definitions(-DBOOST_ALL_NO_LIB)
 endif()
-find_package(Boost 1.59 REQUIRED
+find_package(Boost 1.61 REQUIRED
 			 COMPONENTS filesystem program_options system)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})

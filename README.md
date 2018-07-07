@@ -4,7 +4,7 @@
 
 | Travis <br> (Ubuntu artful, macOS) | AppVeyor <br> (Windows) | Shippable <br> (Debian sid) | Wercker <br> (Alpine Linux, Arch, Fedora) |
 |:-----:|:-----:|:-----:|:-----:|
-| [![Travis](https://travis-ci.org/stephensolis/kameris-backend.svg?branch=master)](https://travis-ci.org/stephensolis/kameris-backend) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/rg09cx4gk3o254ki?svg=true)](https://ci.appveyor.com/project/stephensolis/kameris-backend) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/6af49af6f2d755f54ee92c964a563c02/s/master)](https://app.wercker.com/project/byKey/6af49af6f2d755f54ee92c964a563c02) |
+| [![Travis](https://travis-ci.org/stephensolis/kameris-backend.svg?branch=master)](https://travis-ci.org/stephensolis/kameris-backend) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/g28dvtdr00pq4pvp?svg=true)](https://ci.appveyor.com/project/stephensolis/kameris-backend) | [![Shippable](https://api.shippable.com/projects/58636e44b1bb441000bae2bc/badge?branch=master)](https://app.shippable.com/projects/58636e44b1bb441000bae2bc) | [![Wercker](https://app.wercker.com/status/6af49af6f2d755f54ee92c964a563c02/s/master)](https://app.wercker.com/project/byKey/6af49af6f2d755f54ee92c964a563c02) |
 
 | Coverity | Codacy | Coveralls | Codecov |
 |:-----:|:-----:|:-----:|:-----:|
@@ -12,7 +12,7 @@
 
 This is a fast C++ implementation of some backend generation functionality used by [Kameris](https://github.com/stephensolis/kameris).
 
-It supports the following representations of DNA sequences:
+`libkameris` supports the following representations of DNA sequences:
 
 - [FCGR](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC330698/)
 - [Descriptors](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0655-4)
@@ -29,6 +29,7 @@ and the following distances:
 
 You may be interested the following papers for further reference:
 
+- [An open-source k-mer based machine learning tool for fast and accurate subtyping of HIV-1 genomes](https://www.biorxiv.org/content/early/2018/07/05/362780)
 - [Mapping the Space of Genomic Signatures](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0119815)
 - [An investigation into inter- and intragenomic variations of graphic genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0655-4)
 - [Additive methods for genomic signatures](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1157-8)
@@ -86,18 +87,18 @@ Tests were performed on an AWS [c4.4xlarge](https://aws.amazon.com/ec2/instance-
 This project requires:
 
 - a C++14-compatible compiler
-- a fairly recent [Boost](http://www.boost.org/) (at least 1.59)
-- [CMake](https://cmake.org/) (at least 2.8.12)
+- a fairly recent [Boost](http://www.boost.org/) (at least 1.61)
+- [CMake](https://cmake.org/) (at least 3.1)
 - if you wish to run the full test suite: [clang-format](http://clang.llvm.org/docs/ClangFormat.html), [clang-tidy](http://clang.llvm.org/extra/clang-tidy/), [LCOV](http://ltp.sourceforge.net/coverage/lcov.php), `diff`, `grep`, and `perl`
 
 The following compilers have been tested:
 
-| Compiler                | Version                                                              |
-|-------------------------|----------------------------------------------------------------------|
-| Microsoft Visual Studio | 2017 (19.1)                                                          |
-| Intel C++ Compiler      | 2017 (17.0), 2018 (18.0)                                             |
-| GCC                     | 5.3, 5.4, 6.2, 6.3, 6.4, 7.1                                         |
-| Clang                   | 3.8, 3.9, 4.0, 5.0, 6.0 <br> Apple LLVM 6.1, 7.0, 7.3, 8.0, 8.1, 9.0 |
+| Compiler                | Version                                                         |
+|-------------------------|-----------------------------------------------------------------|
+| Microsoft Visual Studio | 2017 (19.1)                                                     |
+| Intel C++ Compiler      | 2017 (17.0), 2018 (18.0)                                        |
+| GCC                     | 5.3, 5.4, 6.2, 6.3, 6.4, 7.1                                    |
+| Clang                   | 3.9, 4.0, 5.0, 6.0 <br> Apple LLVM 6.1, 7.0, 7.3, 8.0, 8.1, 9.0 |
 
 ### To compile:
 

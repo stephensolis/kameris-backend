@@ -11,9 +11,7 @@
 #include <utility>
 #include <vector>
 
-#include <boost/filesystem.hpp>
-#include <boost/optional.hpp>
-#include <boost/range/iterator_range_core.hpp>
+#include <boost/hana/for_each.hpp>
 
 #include <libkameris/distances.hpp>
 #include <libkameris/utils.hpp>
@@ -25,13 +23,12 @@
 
 using namespace std;
 using namespace kameris;
-namespace fs = boost::filesystem;
 
 const unsigned num_threads = thread::hardware_concurrency();
 
 template <typename dist_t>
 SymmetricDistanceMatrixAdapter<dist_t> make_distance_matrix(size_t size) {
-	dist_t *data = new dist_t[size * (size - 1) / 2];
+	auto data = new dist_t[size * (size - 1) / 2];
 	return make_symmetric_distance_adapter(data, size);
 }
 
@@ -74,21 +71,23 @@ int main(int argc, char *argv[]) {
 	auto info_dists = make_distance_matrix<float>(do_info ? num_matrices : 0);
 
 	for (size_t i = 0; i < num_matrices; ++i) {
-		dispatch_on_element_type(input_header.value_type, [&](auto dummy_val = 0) {
-			using Value = decltype(dummy_val);
+		boost::hana::for_each(element_type_types, [&](auto type) {
+			using Value = typename decltype(type)::type;
 
-			results.push_back(exec.enqueue([&, i]([[gnu::unused]] unsigned _ignore) {
-				for (size_t j = i + 1; j < num_matrices; ++j) {
-					if (do_manhat) {
-						manhat_dists(i, j) = manhattan<uint32_t>(get<MatrixAdapter<Value>>(*matrices[i].get()),
-							get<MatrixAdapter<Value>>(*matrices[j].get()));
+			if (element_type_for_type<Value> == input_header.value_type) {
+				results.push_back(exec.enqueue([&, i]([[gnu::unused]] unsigned _ignore) {
+					for (size_t j = i + 1; j < num_matrices; ++j) {
+						if (do_manhat) {
+							manhat_dists(i, j) = manhattan<uint32_t>(
+								get<MatrixAdapter<Value>>(*matrices[i]), get<MatrixAdapter<Value>>(*matrices[j]));
+						}
+						if (do_info) {
+							info_dists(i, j) = approx_info_dist<float>(
+								get<MatrixAdapter<Value>>(*matrices[i]), get<MatrixAdapter<Value>>(*matrices[j]));
+						}
 					}
-					if (do_info) {
-						info_dists(i, j) = approx_info_dist<float>(get<MatrixAdapter<Value>>(*matrices[i].get()),
-							get<MatrixAdapter<Value>>(*matrices[j].get()));
-					}
-				}
-			}));
+				}));
+			}
 		});
 	}
 
